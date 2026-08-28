@@ -312,10 +312,10 @@ var V_MARKET = (function (ST, U, CH) {
     var content;
     if (tab === 'brief') {
       content = '<div class="gridcards g4 mb16">' +
-        '<div class="kpi"><div class="k">LCDOS overall</div><div class="v" style="color:' + U.scoreColor(e.lcdos) + '">' + U.n1(e.lcdos) + '</div><div class="s">rank #' + r.rank + ' of ' + ST.DER.ranked.length + '</div></div>' +
-        '<div class="kpi"><div class="k">GC entry opportunity</div><div class="v" style="color:' + U.scoreColor(e.gce) + '">' + U.n1(e.gce) + '</div><div class="s">rank #' + r.rank_gce + '</div></div>' +
-        '<div class="kpi"><div class="k">Developer opportunity</div><div class="v" style="color:' + U.scoreColor(e.dev) + '">' + U.n1(e.dev) + '</div><div class="s">rank #' + r.rank_dev + '</div></div>' +
-        '<div class="kpi"><div class="k">Opportunity gap</div><div class="v" style="color:' + U.scoreColor(e.gap) + '">' + U.n1(e.gap) + '</div><div class="s">upside ' + U.n0(e.flu) + ' vs maturity ' + U.n0(e.cls) + '</div></div>' +
+        '<div class="kpi"><div class="k">LCDOS overall</div><div class="v sc" style="--tint:' + U.scoreColor(e.lcdos) + '">' + U.n1(e.lcdos) + '</div><div class="s">rank #' + r.rank + ' of ' + ST.DER.ranked.length + '</div></div>' +
+        '<div class="kpi"><div class="k">GC entry opportunity</div><div class="v sc" style="--tint:' + U.scoreColor(e.gce) + '">' + U.n1(e.gce) + '</div><div class="s">rank #' + r.rank_gce + '</div></div>' +
+        '<div class="kpi"><div class="k">Developer opportunity</div><div class="v sc" style="--tint:' + U.scoreColor(e.dev) + '">' + U.n1(e.dev) + '</div><div class="s">rank #' + r.rank_dev + '</div></div>' +
+        '<div class="kpi"><div class="k">Opportunity gap</div><div class="v sc" style="--tint:' + U.scoreColor(e.gap) + '">' + U.n1(e.gap) + '</div><div class="s">upside ' + U.n0(e.flu) + ' vs maturity ' + U.n0(e.cls) + '</div></div>' +
         '</div>' +
         (sigs.length ? '<div class="gridcards g3 mb16">' + sigs.map(function (s) {
           return '<div class="alert sev' + s.sev + '"><h5>' +
@@ -328,14 +328,14 @@ var V_MARKET = (function (ST, U, CH) {
         '<div class="gridcards g3">' +
         e.catRows.map(function (c) {
           return '<div class="kpi"><div class="k">' + U.esc(c.label) + ' · ' + c.weight + '%</div>' +
-            '<div class="v" style="color:' + U.scoreColor(c.v) + '">' + U.n1(c.v) + '</div>' +
+            '<div class="v sc" style="--tint:' + U.scoreColor(c.v) + '">' + U.n1(c.v) + '</div>' +
             '<div class="s">contributes ' + U.n1(c.contrib) + ' points</div></div>';
         }).join('') + '</div>' +
         '<h2>Derived scores</h2><div class="gridcards g4">' +
         [['Current luxury strength', e.cls], ['Future luxury upside', e.flu], ['Opportunity gap', e.gap],
          ['Momentum', e.momentum], ['5-year outlook', e.f5], ['10-year outlook', e.f10],
          ['20-year outlook', e.f20], ['Long-run risk (inverted)', 100 - e.risk]].map(function (x) {
-          return '<div class="kpi"><div class="k">' + U.esc(x[0]) + '</div><div class="v" style="color:' + U.scoreColor(x[1]) + '">' + U.n1(x[1]) + '</div></div>';
+          return '<div class="kpi"><div class="k">' + U.esc(x[0]) + '</div><div class="v sc" style="--tint:' + U.scoreColor(x[1]) + '">' + U.n1(x[1]) + '</div></div>';
         }).join('') + '</div>';
     } else if (tab === 'indicators') {
       content = indicatorDetail(r);
@@ -373,9 +373,9 @@ var V_MARKET = (function (ST, U, CH) {
       '<span class="pill" style="color:' + U.confBand(r.confidence).color + '">Confidence ' + r.confidence + ' · ' + U.esc(U.confBand(r.confidence).label) + '</span>' +
       '</div>' +
       '<p class="lede">' + U.esc(m.blurb) + '</p>' +
-      '<div class="flex gap6 mb16 printhide" style="flex-wrap:wrap;border-bottom:1px solid var(--hairline-2);padding-bottom:10px">' +
+      '<div class="subnav printhide">' +
       tabs.map(function (t) {
-        return '<button class="chip' + (tab === t.id ? ' on' : '') + '" data-mtab="' + t.id + '">' + U.esc(t.l) + '</button>';
+        return '<button class="subtab' + (tab === t.id ? ' on' : '') + '" data-mtab="' + t.id + '">' + U.esc(t.l) + '</button>';
       }).join('') + '</div>' +
       content +
       '</div></div></div>';

@@ -43,7 +43,7 @@ var V_MATRIX = (function (ST, U, CH) {
       xLabel: 'CURRENT LUXURY MATURITY  →', yLabel: 'FUTURE GROWTH POTENTIAL  →',
       quadrants: [
         { x: 'hi', y: 'hi', label: 'Elite established', color: QC.elite() },
-        { x: 'lo', y: 'hi', label: 'Emerging luxury', color: QC.emerge() },
+        { x: 'lo', y: 'hi', label: 'Emerging luxury', color: QC.emerge(), emphasis: true },
         { x: 'hi', y: 'lo', label: 'Mature luxury', color: QC.mature() },
         { x: 'lo', y: 'lo', label: 'Speculative', color: QC.spec() }
       ]
@@ -55,7 +55,7 @@ var V_MATRIX = (function (ST, U, CH) {
       width: 1000, height: 600, xDomain: [25, 85], yDomain: [15, 80], midX: 58, midY: 48,
       xLabel: 'CONSTRUCTION DEMAND  →', yLabel: 'CONTRACTOR CAPACITY  →',
       quadrants: [
-        { x: 'hi', y: 'lo', label: 'Entry opportunity alert', color: QC.alert() },
+        { x: 'hi', y: 'lo', label: 'Entry opportunity alert', color: QC.alert(), emphasis: true },
         { x: 'hi', y: 'hi', label: 'Served — competitive', color: QC.served() },
         { x: 'lo', y: 'lo', label: 'Thin on both sides', color: QC.thin() },
         { x: 'lo', y: 'hi', label: 'Oversupplied contractors', color: QC.over() }

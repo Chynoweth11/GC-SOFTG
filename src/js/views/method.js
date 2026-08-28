@@ -287,9 +287,9 @@ var V_METHOD = (function (ST, U, CH) {
       ST.MODEL.CATEGORIES.reduce(function (a, c) { return a + c.indicators.length; }, 0) +
       ' indicators, computed from 70 primitive quantities per market. This module prints the entire model — every weight, every formula, ' +
       'every source, and an honest account of what the data can and cannot support.</p>' +
-      '<div class="flex gap6 mb16" style="flex-wrap:wrap;border-bottom:1px solid var(--hairline-2);padding-bottom:10px">' +
+      '<div class="subnav">' +
       TABS.map(function (t) {
-        return '<button class="chip' + (tab === t.id ? ' on' : '') + '" data-mt="' + t.id + '">' + U.esc(t.l) + '</button>';
+        return '<button class="subtab' + (tab === t.id ? ' on' : '') + '" data-mt="' + t.id + '">' + U.esc(t.l) + '</button>';
       }).join('') + '</div>' + content + '</div></div></div>';
     U.on(body, 'click', '[data-mt]', function (e, t) { tab = t.dataset.mt; render(body); });
     U.on(body, 'click', 'tr[data-id]', function (e, t) { ST.selectMarket(t.dataset.id); ST.set({ view: 'market' }, 'view'); });

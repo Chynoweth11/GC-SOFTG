@@ -48,12 +48,14 @@
     var scOn = ST.S.scenarioOn && Object.keys(ST.S.scenario).some(function (k) { return ST.S.scenario[k]; });
     var nf = typeof FILTERS !== 'undefined' ? FILTERS.activeCount() : 0;
     var ctx = CONTEXTUAL.filter(function (m) { return m.id === ST.S.view; })[0];
-    return '<div class="brand"><div class="brand-mark">L</div><div class="brand-text">' +
-      '<b>LCDOS</b></div></div>' +
+    return '<div class="brand"><div class="brand-text">' +
+      '<b>LCDOS</b> <span>survey</span></div></div>' +
       '<div class="modules">' + MODULES.map(function (m) {
         return '<button class="mod' + (ST.S.view === m.id ? ' on' : '') + '" data-view="' + m.id + '">' + U.esc(m.label) + '</button>';
-      }).join('') + '</div>' +
-      (ctx ? '<span class="pill accent">' + U.esc(ctx.label) + '</span>' : '') +
+      }).join('') +
+      /* The surface you are on belongs in the index, not floating beside it. */
+      (ctx ? '<span class="mod on ctx">' + U.esc(ctx.label) + '</span>' : '') +
+      '</div>' +
       '<div class="topright">' +
       (nf ? '<span class="pill accent">' + nf + ' filter' + (nf > 1 ? 's' : '') + '</span>' : '') +
       (scOn ? '<span class="pill hot">Scenario</span>' : '') +

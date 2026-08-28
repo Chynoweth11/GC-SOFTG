@@ -172,7 +172,7 @@ var V_IC = (function (ST, U, CH) {
        ['Momentum', e.momentum, U.pctS(e.momentumRate) + ' a year'],
        ['5-year outlook', e.f5, ''], ['10-year outlook', e.f10, ''], ['20-year outlook', e.f20, '']
       ].map(function (x) {
-        return '<div class="kpi"><div class="k">' + U.esc(x[0]) + '</div><div class="v" style="color:' + U.scoreColor(x[1]) + '">' +
+        return '<div class="kpi"><div class="k">' + U.esc(x[0]) + '</div><div class="v sc" style="--tint:' + U.scoreColor(x[1]) + '">' +
           U.n1(x[1]) + '</div>' + (x[2] ? '<div class="s">' + U.esc(x[2]) + '</div>' : '') + '</div>';
       }).join('') + '</div>' +
 

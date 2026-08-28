@@ -16,8 +16,11 @@ const ROOT = path.join(__dirname, '..');
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
 
+/* Two families, two jobs: words are set in the serif, figures in the mono.
+ * Spectral carries a 56px headline and 13px body copy from one family, so the
+ * page needs no third face to hold its hierarchy. */
 const FAMILIES = [
-  'Archivo:wght@400;500;600;700',
+  'Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400',
   'IBM+Plex+Mono:wght@400;500;600'
 ];
 
@@ -43,9 +46,10 @@ async function main() {
 
   let out = '/* GENERATED FILE - do not edit by hand.\n' +
             ' * Produced by tools/build-fonts.js from Google Fonts.\n' +
-            ' * Archivo (Omnibus-Type) and IBM Plex Mono (IBM) are both SIL Open Font\n' +
-            ' * License 1.1. Latin and latin-ext subsets only, embedded as data URIs so\n' +
-            ' * the application makes no external requests at all.\n' +
+            ' * Spectral (Production Type) and IBM Plex Mono (IBM) are both SIL Open\n' +
+            ' * Font License 1.1.\n' +
+            ' * Latin subset only, embedded as data URIs so the application makes no\n' +
+            ' * external requests at all.\n' +
             ' */\n';
 
   let bytes = 0, faces = 0;

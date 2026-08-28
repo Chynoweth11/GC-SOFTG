@@ -92,7 +92,7 @@ var V_RADAR = (function (ST, U, CH) {
       width: 980, height: 500, xDomain: [35, 80], yDomain: [20, 95], midX: 57, midY: 55,
       xLabel: 'LCDOS SCORE (level)  →', yLabel: 'MOMENTUM (rate of change)  →',
       quadrants: [
-        { x: 'lo', y: 'hi', label: 'Early — accelerating, not yet priced', color: U.cssvar('--s4', '#df7a33') },
+        { x: 'lo', y: 'hi', label: 'Early — accelerating, not yet priced', color: U.cssvar('--s4', '#a96434'), emphasis: true },
         { x: 'hi', y: 'hi', label: 'Compounding leaders', color: U.cssvar('--s1', '#3f9e8c') },
         { x: 'hi', y: 'lo', label: 'Established, slowing', color: U.cssvar('--s0', '#4a6fa5') },
         { x: 'lo', y: 'lo', label: 'Dormant', color: U.cssvar('--ink-3', '#767c87') }

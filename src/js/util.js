@@ -35,7 +35,7 @@ var U = (function () {
   /* -------------------------------------------------------------- colours
    * The ramp lives in CSS as --s0..--s5 so that light and dark resolve from
    * one source of truth. Read once and cache; themeChanged() drops the cache. */
-  var RAMP_FALLBACK = ['#4a6fa5', '#3f9e8c', '#7fbf5a', '#e8b13c', '#df7a33', '#b8442a'];
+  var RAMP_FALLBACK = ['#5f7f5a', '#7d9a5c', '#9a8d40', '#b4823a', '#a96434', '#83381f'];
   var STOPS = [0, 38, 52, 66, 78, 90];
   var _ramp = null, _tok = {};
 
@@ -63,7 +63,7 @@ var U = (function () {
   /** Continuous 0-100 -> ramp colour. */
   function scoreColor(v) {
     var R = ramp();
-    if (v == null || isNaN(v)) return cssvar('--ink-4', '#9aa0ab');
+    if (v == null || isNaN(v)) return cssvar('--ink-4', '#8c8f95');
     v = Math.max(0, Math.min(100, v));
     for (var i = STOPS.length - 1; i >= 0; i--) {
       if (v >= STOPS[i]) {
@@ -76,11 +76,14 @@ var U = (function () {
     return R[0];
   }
 
-  /** Colour with a low-alpha fill, for score chips. */
+  /** A score reads as an elevation: the figure in ink, and a hypsometric rule
+   *  beneath it carrying the band. The tint is on the rule, never behind the
+   *  number — a table of pastel lozenges is noise, and the rule says the same
+   *  thing without shouting. */
   function scoreChip(v, cls) {
     var c = scoreColor(v);
-    return '<span class="score ' + (cls || '') + '" style="color:' + c + ';border-color:' + c + '44;background:' + c + '14">' +
-      (v == null || isNaN(v) ? '—' : Math.round(v * 10) / 10) + '</span>';
+    return '<span class="score ' + (cls || '') + '" style="color:' + c + '">' +
+      '<i>' + (v == null || isNaN(v) ? '—' : Math.round(v * 10) / 10) + '</i></span>';
   }
 
   function bar(v, color) {
@@ -97,10 +100,10 @@ var U = (function () {
 
   /* Confidence banding — a hard rule about what a score may be used for. */
   var CONF_BANDS = [
-    { min: 75, label: 'Underwriting-grade', desc: 'Sufficient to support a specific transaction decision.', tok: '--pos', fb: '#12805c' },
-    { min: 55, label: 'Analysis-grade', desc: 'Sufficient to build an investment case; verify key inputs before committing.', tok: '--s2', fb: '#7fbf5a' },
-    { min: 35, label: 'Screening-grade', desc: 'Sufficient to rank and shortlist markets. Not sufficient to underwrite.', tok: '--warn', fb: '#a8710a' },
-    { min: 0, label: 'Indicative', desc: 'Directional only. Treat every figure as a hypothesis to be tested.', tok: '--neg', fb: '#c0392f' }
+    { min: 75, label: 'Underwriting-grade', desc: 'Sufficient to support a specific transaction decision.', tok: '--pos', fb: '#43684a' },
+    { min: 55, label: 'Analysis-grade', desc: 'Sufficient to build an investment case; verify key inputs before committing.', tok: '--s2', fb: '#9a8d40' },
+    { min: 35, label: 'Screening-grade', desc: 'Sufficient to rank and shortlist markets. Not sufficient to underwrite.', tok: '--warn', fb: '#8a6a20' },
+    { min: 0, label: 'Indicative', desc: 'Directional only. Treat every figure as a hypothesis to be tested.', tok: '--neg', fb: '#8a4726' }
   ];
   function confBand(v) {
     var b = CONF_BANDS[CONF_BANDS.length - 1];

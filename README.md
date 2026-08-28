@@ -41,10 +41,36 @@ node tools/build.js && open dist/index.html
 
 No build step is required for development. No package installs, no bundler, no
 framework — the application loads plain scripts in dependency order. There are
-**no network requests at all**: the two typefaces (Archivo and IBM Plex Mono) are
+**no network requests at all**: the two typefaces (Spectral and IBM Plex Mono) are
 inlined as `woff2` data URIs by `tools/build-fonts.js`, and every byte the page
 needs ships with it. It runs offline, from a file:// URL, or from any static
 host without change.
+
+## Design
+
+The interface is built as a **survey sheet, not a dashboard**. The subject is
+land, so the reference is the thing a surveyor actually reads: a quadrangle
+sheet. Three rules follow from that, and they are enforced throughout
+`src/css/app.css`:
+
+1. **Structure is ruled, not boxed.** There are no cards, no drop shadows and no
+   rounded corners in the stylesheet. Sections are bands of the sheet opened by
+   a hairline and a marginal label; grid columns are divided by a rule and
+   nothing else.
+2. **Colour encodes, it never decorates.** The score ramp is a genuine
+   hypsometric tint sequence — low ground green, through olive and ochre, to
+   high brown — because a score *is* an elevation, and the same ramp tints the
+   map. A score in a table is an ink figure with that tint on a 2px rule
+   beneath it, never a filled pastel lozenge. Series colours in comparison
+   charts come from a separate *categorical* set of muted survey inks, so a
+   palette that carries order is never confused with one that doesn't.
+3. **Words are serif, figures are mono.** Spectral carries a 54px headline and
+   13px body copy from one family; IBM Plex Mono takes every number, column
+   header and marginal label. Both ship inlined as `woff2` data URIs.
+
+The full light and dark palettes are defined as tokens at the top of
+`src/css/app.css`, and every component draws from them, so neither theme has a
+colour whose only definition sits behind a media query.
 
 ## The seven modules
 

@@ -335,7 +335,7 @@ var V_SIM = (function (ST, U, CH) {
         width: 560, height: 420, xDomain: [35, 78], yDomain: [25, 85], midX: 56, midY: 55,
         xLabel: 'LCDOS  →', yLabel: 'FIT FOR THIS COMPANY  →',
         quadrants: [
-          { x: 'lo', y: 'hi', label: 'Fits you, under-rated', color: U.cssvar('--s3', '#e8b13c') },
+          { x: 'lo', y: 'hi', label: 'Fits you, under-rated', color: U.cssvar('--s3', '#c08f43'), emphasis: true },
           { x: 'hi', y: 'hi', label: 'Target', color: U.cssvar('--s1', '#3f9e8c') },
           { x: 'hi', y: 'lo', label: 'Good market, wrong company', color: U.cssvar('--s0', '#4a6fa5') },
           { x: 'lo', y: 'lo', label: 'Avoid', color: U.cssvar('--ink-3', '#767c87') }
@@ -417,7 +417,7 @@ var V_SIM = (function (ST, U, CH) {
       '<div class="s">incl. ' + U.usd(pf.totalInterest) + ' financing</div></div>' +
       '<div class="kpi"><div class="k">Revenue</div><div class="v">' + U.usd(pf.revenue) + '</div>' +
       '<div class="s">' + d.lots + ' homes @ ' + U.usd(d.avgHome) + '</div></div>' +
-      '<div class="kpi"><div class="k">Development margin</div><div class="v" style="color:' + U.scoreColor(pf.margin * 3.3) + '">' +
+      '<div class="kpi"><div class="k">Development margin</div><div class="v sc" style="--tint:' + U.scoreColor(pf.margin * 3.3) + '">' +
       U.pct(pf.margin) + '</div><div class="s">net of financing ' + U.pct(pf.netMargin) + '</div></div>' +
       '<div class="kpi"><div class="k">Levered IRR</div><div class="v" style="color:' +
       U.scoreColor(pf.irr == null ? 0 : pf.irr * 100 * 3.4) + '">' + (pf.irr == null ? 'n/m' : U.pct(pf.irr * 100)) + '</div>' +

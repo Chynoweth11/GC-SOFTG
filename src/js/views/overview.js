@@ -13,19 +13,21 @@ var V_OVERVIEW = (function (ST, U, CH) {
     return '<div class="panel ansc">' +
       '<div class="pad">' +
       '<div class="tiny" style="margin-bottom:6px">' + U.esc(kicker) + '</div>' +
-      '<div style="font-size:15px;font-weight:600;letter-spacing:-.012em;margin-bottom:14px;color:var(--ink)">' +
-      U.esc(question) + '</div>' +
+      '<div class="ansq">' + U.esc(question) + '</div>' +
       '<button class="ansbig" data-id="' + top.id + '">' +
+      '<span class="ansrk">1</span>' +
       '<span class="ansname">' + U.esc(top.m.name) + '</span>' +
       '<span class="ansmeta">' + U.esc(top.m.state) + ' · ' + U.esc(top.m.county) + '</span>' +
-      '<span class="ansscore" style="color:' + U.scoreColor(top[scoreKey]) + '">' + U.n1(top[scoreKey]) + '</span>' +
+      '<span class="ansscore"><b>' + U.n1(top[scoreKey]) + '</b>' +
+      '<i style="background:' + U.scoreColor(top[scoreKey]) + '"></i></span>' +
       '</button>' +
       '<div class="ansrest">' +
       rows.slice(1, 5).map(function (r, i) {
         return '<button class="ansrow" data-id="' + r.id + '">' +
-          '<span class="dim2 mono" style="width:16px">' + (i + 2) + '</span>' +
+          '<span class="ansrk">' + (i + 2) + '</span>' +
           '<span class="ansrn">' + U.esc(r.m.name) + '</span>' +
-          '<span class="mono" style="color:' + U.scoreColor(r[scoreKey]) + ';font-weight:600">' + U.n1(r[scoreKey]) + '</span>' +
+          '<span class="ansscore sm"><b>' + U.n1(r[scoreKey]) + '</b>' +
+          '<i style="background:' + U.scoreColor(r[scoreKey]) + '"></i></span>' +
           '</button>';
       }).join('') +
       '</div>' +

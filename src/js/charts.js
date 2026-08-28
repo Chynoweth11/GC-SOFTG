@@ -17,10 +17,14 @@ var CH = (function (U) {
   var ACC  = function () { return T('--accent', '#1c5fd4'); };
   var PANEL= function () { return T('--surface', '#ffffff'); };
   var CANVAS = function () { return T('--canvas', '#f4f5f7'); };
+  /* Categorical, not sequential: these tell one series from another and carry
+     no magnitude, so they come from the categorical tokens rather than the
+     hypsometric ramp — mixing the two would imply an order that isn't there. */
+  var CAT_FB = ['#1c4670', '#a9542c', '#4f6b3a', '#8a6a20',
+                '#5b5470', '#7b4a52', '#2f6b6b', '#6e6a5f'];
   function seriesColors() {
-    return [T('--accent', '#1c5fd4'), T('--s1', '#3f9e8c'), T('--s3', '#e8b13c'), '#7c5cd6',
-            T('--s4', '#df7a33'), '#c9559b', T('--s2', '#7fbf5a'), T('--neg', '#c0392f'),
-            T('--s0', '#4a6fa5'), T('--ink-3', '#767c87')];
+    return CAT_FB.map(function (fb, i) { return T('--c' + i, fb); })
+      .concat([T('--ink-2', '#3f434a'), T('--ink-3', '#71757c')]);
   }
 
   function esc(s) { return U.esc(s); }
@@ -61,7 +65,7 @@ var CH = (function (U) {
         var v = U.clamp(s.values[j] == null ? 0 : s.values[j], 0, 100), rr = R * v / 100;
         pts.push(r2(cx + rr * Math.cos(aa)) + ',' + r2(cy + rr * Math.sin(aa)));
       }
-      out.push('<polygon points="' + pts.join(' ') + '" fill="' + col + '" fill-opacity="' + (series.length > 1 ? 0.11 : 0.18) +
+      out.push('<polygon points="' + pts.join(' ') + '" fill="' + col + '" fill-opacity="' + (series.length > 1 ? 0.05 : 0.14) +
         '" stroke="' + col + '" stroke-width="1.8" stroke-linejoin="round"/>');
       pts.forEach(function (p) {
         var xy = p.split(',');
@@ -119,7 +123,10 @@ var CH = (function (U) {
       opts.quadrants.forEach(function (q) {
         var x0 = q.x === 'hi' ? sx(mx) : m.l, x1 = q.x === 'hi' ? m.l + iw : sx(mx);
         var y0 = q.y === 'hi' ? m.t : sy(my), y1 = q.y === 'hi' ? sy(my) : m.t + ih;
-        out.push('<rect class="quad-fill" x="' + r2(x0) + '" y="' + r2(y0) + '" width="' + r2(x1 - x0) + '" height="' + r2(y1 - y0) + '" fill="' + q.color + '"/>');
+        if (q.emphasis) {
+          out.push('<rect class="quad-fill" x="' + r2(x0) + '" y="' + r2(y0) + '" width="' + r2(x1 - x0) +
+            '" height="' + r2(y1 - y0) + '" fill="' + q.color + '"/>');
+        }
         var tx = q.x === 'hi' ? x1 - 10 : x0 + 10, ta = q.x === 'hi' ? 'end' : 'start';
         var ty = q.y === 'hi' ? y0 + 16 : y1 - 8;
         out.push('<text class="quad-label" x="' + r2(tx) + '" y="' + r2(ty) + '" text-anchor="' + ta + '" fill="' + q.color + '" opacity=".72">' + esc(q.label) + '</text>');
@@ -188,7 +195,8 @@ var CH = (function (U) {
       out.push('<g class="pt" data-id="' + esc(p.id) + '" style="cursor:pointer">');
       if (p.sel) out.push('<circle cx="' + r2(cx) + '" cy="' + r2(cy) + '" r="' + (rr + 5) + '" fill="none" stroke="' + INK() + '" stroke-width="1.2" opacity=".55"/>');
       out.push('<circle cx="' + r2(cx) + '" cy="' + r2(cy) + '" r="' + (rr + 4) + '" fill="' + p.color + '" opacity=".14"/>');
-      out.push('<circle cx="' + r2(cx) + '" cy="' + r2(cy) + '" r="' + rr + '" fill="' + p.color + '" stroke="' + PANEL() + '" stroke-width=".7"><title>' + esc(p.label) + '</title></circle>');
+      out.push('<circle cx="' + r2(cx) + '" cy="' + r2(cy) + '" r="' + rr + '" fill="' + p.color +
+        '" stroke="' + INK() + '" stroke-width=".6" stroke-opacity=".28"><title>' + esc(p.label) + '</title></circle>');
       var lb = labelBy[p.id];
       if (lb) {
         out.push('<text x="' + r2(lb.x) + '" y="' + r2(lb.y) + '" text-anchor="' + lb.a + '" class="ptlbl" font-size="9" fill="' + INK2() +
