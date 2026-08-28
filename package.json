@@ -1,0 +1,16 @@
+{
+  "name": "lcdos-terminal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LCDOS Terminal - U.S. Luxury Construction & Development Opportunity intelligence engine",
+  "scripts": {
+    "build": "node tools/build.js",
+    "geo": "node tools/build-geo.js",
+    "serve": "python3 -m http.server 8080",
+    "check": "node tools/check.js"
+  },
+  "devDependencies": {
+    "us-atlas": "^3.0.1",
+    "topojson-client": "^3.1.0"
+  }
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LCDOS Terminal — U.S. Luxury Construction &amp; Development Intelligence</title>
+<meta name="description" content="A market-intelligence engine for deciding where to deploy construction and real-estate capital in the United States. 79 markets, 70 indicators, a fully auditable scoring model.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2306080c'/><text x='16' y='23' font-size='19' font-family='monospace' font-weight='700' fill='%233fd9ad' text-anchor='middle'>L</text></svg>">
+<link rel="stylesheet" href="src/css/app.css">
+</head>
+<body>
+<div id="app">
+  <div class="topbar" id="topbar"></div>
+  <div class="body" id="body"></div>
+</div>
+
+<!-- geometry + projection -->
+<script src="src/js/albers.js"></script>
+<script src="src/data/geo.js"></script>
+
+<!-- model + data -->
+<script src="src/data/model.js"></script>
+<script src="src/data/markets.js"></script>
+<script src="src/data/markets-mtn-a.js"></script>
+<script src="src/data/markets-mtn-b.js"></script>
+<script src="src/data/markets-west.js"></script>
+<script src="src/data/markets-se-fl.js"></script>
+<script src="src/data/markets-se-atl.js"></script>
+<script src="src/data/markets-central.js"></script>
+<script src="src/data/markets-ne-mw.js"></script>
+<script src="src/data/pipeline.js"></script>
+<script src="src/data/profiles.js"></script>
+<script src="src/data/profiles-b.js"></script>
+<script src="src/data/profiles-c.js"></script>
+<script src="src/data/profiles-d.js"></script>
+
+<!-- engine -->
+<script src="src/js/util.js"></script>
+<script src="src/js/charts.js"></script>
+<script src="src/js/scoring.js"></script>
+<script src="src/js/store.js"></script>
+<script src="src/js/map.js"></script>
+
+<!-- views -->
+<script src="src/js/views/terminal.js"></script>
+<script src="src/js/views/rankings.js"></script>
+<script src="src/js/views/matrix.js"></script>
+<script src="src/js/views/radar.js"></script>
+<script src="src/js/views/compare.js"></script>
+<script src="src/js/views/market.js"></script>
+<script src="src/js/views/simulators.js"></script>
+<script src="src/js/views/scenario.js"></script>
+<script src="src/js/views/ic.js"></script>
+<script src="src/js/views/method.js"></script>
+
+<script src="src/js/app.js"></script>
+</body>
+</html>
