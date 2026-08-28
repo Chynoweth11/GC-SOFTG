@@ -40,8 +40,9 @@ node tools/build.js && open dist/index.html
 ```
 
 No build step is required for development. No package installs, no bundler, no
-framework. The application loads plain scripts in dependency order and makes
-**zero external network requests**.
+framework — the application loads plain scripts in dependency order. The only
+external request is the IBM Plex web font; the CSS declares real fallback stacks,
+so the page renders correctly with no network at all.
 
 ## The ten modules
 

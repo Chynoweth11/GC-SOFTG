@@ -23,9 +23,11 @@ function safeJs(src) { return src.replace(/<\/script>/gi, '<\\/script>'); }
 
 let out = html;
 
-/* stylesheets */
-out = out.replace(/<link rel="stylesheet" href="([^"]+)">/g, (_, href) =>
-  '<style>\n' + read(href) + '\n</style>');
+/* stylesheets — local files are inlined; remote font links are left alone
+ * (fonts.googleapis.com is on the Artifact CSP allowlist, and the CSS declares
+ * real fallback stacks so the page renders correctly with no network at all). */
+out = out.replace(/<link rel="stylesheet" href="([^"]+)">/g, (m, href) =>
+  /^https?:/.test(href) ? m : '<style>\n' + read(href) + '\n</style>');
 
 /* scripts, in declared order */
 out = out.replace(/<script src="([^"]+)"><\/script>/g, (_, src) =>
@@ -39,11 +41,16 @@ const title = (out.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || 'LCDOS Termi
 const head = out.slice(out.indexOf('<head>') + 6, out.indexOf('</head>'));
 const body = out.slice(out.indexOf('<body>') + 6, out.lastIndexOf('</body>'));
 const styles = (head.match(/<style>[\s\S]*?<\/style>/g) || []).join('\n');
+const fontLinks = (head.match(/<link [^>]*fonts\.(googleapis|gstatic)\.com[^>]*>/g) || []).join('\n');
 
+/* Artifact variant: no <!doctype>, <html>, <head> or <body> — the publisher
+ * supplies those. Body content goes in unwrapped so #app's 100vh layout still
+ * resolves against the document body. */
 const artifact =
   '<title>' + title + '</title>\n' +
+  fontLinks + '\n' +
   styles + '\n' +
-  '<div id="lcdos-root">' + body + '</div>\n';
+  body.trim() + '\n';
 
 fs.writeFileSync(path.join(ROOT, 'dist/artifact.html'), artifact);
 
