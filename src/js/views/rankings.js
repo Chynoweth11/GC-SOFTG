@@ -152,12 +152,57 @@ var V_RANKINGS = (function (ST, U, CH) {
       ST.selectMarket(t.dataset.id);
       ST.set({ view: 'market' }, 'view');
     });
-    U.on(body, 'click', '[data-act="csv"]', function () {
-      var blob = new Blob([csv()], { type: 'text/csv' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'lcdos-rankings-' + ST.DATA.AS_OF + '.csv';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    U.on(body, 'click', '[data-act="csv"]', openExport);
+  }
+
+
+  /* Export panel.
+   * A download link is not a reliable affordance here: the same build is served
+   * from a repo, opened from the filesystem, and published as a hosted page, and
+   * the hosted viewer never grants pages download permission — the link would
+   * silently do nothing. Copy-to-clipboard works in all three, and the textarea
+   * is the manual fallback when the clipboard API is unavailable (it needs a
+   * secure context). */
+  function openExport() {
+    var text = csv();
+    var rows = ST.filtered().length;
+    var ov = document.createElement('div');
+    ov.className = 'overlay';
+    ov.innerHTML =
+      '<div class="palette" style="width:min(880px,94vw)">' +
+      '<div class="flex between center" style="padding:12px 15px;border-bottom:1px solid var(--line-2);background:var(--panel-2)">' +
+      '<div><b style="font-size:13.5px">Export rankings</b>' +
+      '<div class="dim" style="font-size:11px">' + rows + ' markets · 28 columns · CSV, current sort and filters</div></div>' +
+      '<div class="flex gap6"><button class="btn on" data-x="copy">Copy CSV</button>' +
+      '<button class="btn" data-x="close">Close</button></div></div>' +
+      '<textarea readonly spellcheck="false" style="width:100%;height:46vh;border:0;border-radius:0;resize:none;' +
+      'background:var(--bg-2);color:var(--ink-2);font-family:var(--mono);font-size:10.5px;line-height:1.5;padding:12px 15px">' +
+      U.esc(text) + '</textarea>' +
+      '<div class="dim2" style="padding:9px 15px;font-size:10.5px;border-top:1px solid var(--line)">' +
+      'Every column is documented in docs/DATA-DICTIONARY.md. Scores recompute under the active scenario, so an export taken with a scenario loaded reflects that scenario.</div>' +
+      '</div>';
+    document.body.appendChild(ov);
+    var ta = ov.querySelector('textarea');
+
+    function close() { ov.remove(); document.removeEventListener('keydown', esc); }
+    function esc(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', esc);
+
+    ov.addEventListener('click', function (e) {
+      if (e.target === ov) return close();
+      var b = e.target.closest('[data-x]');
+      if (!b) return;
+      if (b.dataset.x === 'close') return close();
+      var btn = ov.querySelector('[data-x="copy"]');
+      function done(ok) {
+        btn.textContent = ok ? 'Copied' : 'Select and copy';
+        setTimeout(function () { btn.textContent = 'Copy CSV'; }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () {
+          ta.focus(); ta.select(); done(false);
+        });
+      } else { ta.focus(); ta.select(); done(false); }
     });
   }
 
