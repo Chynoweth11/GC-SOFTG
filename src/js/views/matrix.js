@@ -6,6 +6,20 @@ var V_MATRIX = (function (ST, U, CH) {
   var body = null;
   var mode = 'opportunity';
 
+  /* Quadrant hues come from the hypsometric ramp so the chart reads as one
+     system with the map and the score chips, in either theme. */
+  function Q(name, fb) { return U.cssvar(name, fb); }
+  var QC = {
+    elite:   function () { return Q('--s1', '#3f9e8c'); },
+    emerge:  function () { return Q('--s3', '#e8b13c'); },
+    mature:  function () { return Q('--s0', '#4a6fa5'); },
+    spec:    function () { return Q('--ink-3', '#767c87'); },
+    alert:   function () { return Q('--s4', '#df7a33'); },
+    served:  function () { return Q('--s0', '#4a6fa5'); },
+    thin:    function () { return Q('--ink-3', '#767c87'); },
+    over:    function () { return Q('--s5', '#b8442a'); }
+  };
+
   function points(kind) {
     var sel = ST.S.selected, cmp = ST.S.compare;
     return ST.filtered().map(function (r) {
@@ -28,10 +42,10 @@ var V_MATRIX = (function (ST, U, CH) {
       width: 1000, height: 600, xDomain: [20, 95], yDomain: [35, 85], midX: 60, midY: 62,
       xLabel: 'CURRENT LUXURY MATURITY  →', yLabel: 'FUTURE GROWTH POTENTIAL  →',
       quadrants: [
-        { x: 'hi', y: 'hi', label: 'Elite established', color: '#3fd9ad' },
-        { x: 'lo', y: 'hi', label: 'Emerging luxury', color: '#f2b544' },
-        { x: 'hi', y: 'lo', label: 'Mature luxury', color: '#5aa9f5' },
-        { x: 'lo', y: 'lo', label: 'Speculative', color: '#6c7d94' }
+        { x: 'hi', y: 'hi', label: 'Elite established', color: QC.elite() },
+        { x: 'lo', y: 'hi', label: 'Emerging luxury', color: QC.emerge() },
+        { x: 'hi', y: 'lo', label: 'Mature luxury', color: QC.mature() },
+        { x: 'lo', y: 'lo', label: 'Speculative', color: QC.spec() }
       ]
     });
   }
@@ -41,10 +55,10 @@ var V_MATRIX = (function (ST, U, CH) {
       width: 1000, height: 600, xDomain: [25, 85], yDomain: [15, 80], midX: 58, midY: 48,
       xLabel: 'CONSTRUCTION DEMAND  →', yLabel: 'CONTRACTOR CAPACITY  →',
       quadrants: [
-        { x: 'hi', y: 'lo', label: 'ENTRY OPPORTUNITY ALERT', color: '#ff7a45' },
-        { x: 'hi', y: 'hi', label: 'Served — competitive', color: '#5aa9f5' },
-        { x: 'lo', y: 'lo', label: 'Thin on both sides', color: '#6c7d94' },
-        { x: 'lo', y: 'hi', label: 'Oversupplied contractors', color: '#f2545b' }
+        { x: 'hi', y: 'lo', label: 'Entry opportunity alert', color: QC.alert() },
+        { x: 'hi', y: 'hi', label: 'Served — competitive', color: QC.served() },
+        { x: 'lo', y: 'lo', label: 'Thin on both sides', color: QC.thin() },
+        { x: 'lo', y: 'hi', label: 'Oversupplied contractors', color: QC.over() }
       ]
     });
   }
@@ -55,24 +69,24 @@ var V_MATRIX = (function (ST, U, CH) {
     var groups;
     if (mode === 'opportunity') {
       groups = [
-        { l: 'Emerging luxury — the quadrant that matters', c: '#f2b544', rows: q(function (r) { return r.cls < 60 && r.flu >= 62; }),
+        { l: 'Emerging luxury — the quadrant that matters', c: QC.emerge(), rows: q(function (r) { return r.cls < 60 && r.flu >= 62; }),
           d: 'Lower current luxury maturity, high future growth. Demand is forming faster than the market\'s luxury infrastructure and builder base can serve it. This is where a new firm compounds fastest.' },
-        { l: 'Elite established', c: '#3fd9ad', rows: q(function (r) { return r.cls >= 60 && r.flu >= 62; }),
+        { l: 'Elite established', c: QC.elite(), rows: q(function (r) { return r.cls >= 60 && r.flu >= 62; }),
           d: 'High on both. Real work, real prestige, and real competition — the strongest markets to expand into once you have a reference book, not to start in.' },
-        { l: 'Mature luxury', c: '#5aa9f5', rows: q(function (r) { return r.cls >= 60 && r.flu < 62; }),
+        { l: 'Mature luxury', c: QC.mature(), rows: q(function (r) { return r.cls >= 60 && r.flu < 62; }),
           d: 'Extraordinary luxury strength, limited runway. Excellent remodel and teardown markets; almost no land development business available.' },
-        { l: 'Speculative', c: '#6c7d94', rows: q(function (r) { return r.cls < 60 && r.flu < 62; }),
+        { l: 'Speculative', c: QC.spec(), rows: q(function (r) { return r.cls < 60 && r.flu < 62; }),
           d: 'Neither established nor clearly accelerating. Some are genuinely early; most are simply small. Read the confidence score before acting on anything here.' }
       ];
     } else {
       groups = [
-        { l: 'Entry opportunity alert — high demand, low capacity', c: '#ff7a45', rows: q(function (r) { return r.demandIdx >= 58 && r.capacityIdx <= 48; }),
+        { l: 'Entry opportunity alert — high demand, low capacity', c: QC.alert(), rows: q(function (r) { return r.demandIdx >= 58 && r.capacityIdx <= 48; }),
           d: 'Clients here cannot get a builder. This is a raw supply/demand screen, not a recommendation — check the GC Entry Score beside each name, because some of these markets are hard to be let into.' },
-        { l: 'Served and competitive', c: '#5aa9f5', rows: q(function (r) { return r.demandIdx >= 58 && r.capacityIdx > 48; }),
+        { l: 'Served and competitive', c: QC.served(), rows: q(function (r) { return r.demandIdx >= 58 && r.capacityIdx > 48; }),
           d: 'Deep demand with a deep incumbent bench. Winnable, but on differentiation rather than availability.' },
-        { l: 'Thin on both sides', c: '#6c7d94', rows: q(function (r) { return r.demandIdx < 58 && r.capacityIdx <= 48; }),
+        { l: 'Thin on both sides', c: QC.thin(), rows: q(function (r) { return r.demandIdx < 58 && r.capacityIdx <= 48; }),
           d: 'Small markets where the builder base matches the work. A firm can own one of these, but it will cap out.' },
-        { l: 'Contractor oversupply', c: '#f2545b', rows: q(function (r) { return r.demandIdx < 58 && r.capacityIdx > 48; }),
+        { l: 'Contractor oversupply', c: QC.over(), rows: q(function (r) { return r.demandIdx < 58 && r.capacityIdx > 48; }),
           d: 'More capable builders than luxury work. The hardest place to establish pricing power.' }
       ];
     }
@@ -102,10 +116,7 @@ var V_MATRIX = (function (ST, U, CH) {
       '<div class="dim" style="font-size:11.5px">' +
       (isOpp ? 'Current luxury maturity against future growth potential. Node size is annual $2M+ construction volume.'
              : 'Where luxury construction demand exceeds the capacity of the contractors serving it.') + '</div></div>' +
-      '<div class="flex gap6">' +
-      '<button class="btn' + (isOpp ? ' on' : '') + '" data-mode="opportunity">Opportunity matrix</button>' +
-      '<button class="btn' + (!isOpp ? ' on' : '') + '" data-mode="supply">Supply vs demand</button>' +
-      '</div></div>' +
+      '</div>' +
       '<div class="panel mb16"><div class="pad" style="padding:6px"><div style="max-width:1180px;margin:0 auto">' +
       (isOpp ? chartOpportunity() : chartSupplyDemand()) + '</div></div></div>' +
       quadrantList() +
@@ -123,5 +134,9 @@ var V_MATRIX = (function (ST, U, CH) {
     });
   }
 
-  return { render: render, onEvent: function (w) { if (body && (w === 'scenario' || w === 'select')) render(body); } };
+  return {
+    render: render,
+    setMode: function (m) { mode = m; },
+    onEvent: function (w) { if (body && (w === 'scenario' || w === 'select')) render(body); }
+  };
 })(STORE, U, CH);

@@ -1,0 +1,86 @@
+name: Refresh market data
+
+# Pulls the observed data layer from Census, BLS, IRS, FEMA and Zillow, rebuilds
+# the derived artefacts, and commits the result. Runs weekly; the government
+# sources update monthly to annually, so weekly is comfortably ahead of them.
+on:
+  schedule:
+    - cron: '17 9 * * 1'      # Mondays 09:17 UTC
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated source ids (blank = all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The pipeline caches large source files; keeping them between runs makes
+      # a refresh fast and survives a single source being briefly down.
+      - name: Restore source cache
+        uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: lcdos-source-cache-${{ github.run_id }}
+          restore-keys: lcdos-source-cache-
+
+      - name: Ingest
+        run: |
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            node tools/ingest --only=${{ github.event.inputs.only }}
+          else
+            node tools/ingest
+          fi
+
+      - name: Validate
+        run: |
+          node tools/validate-geo.js
+          node tools/check.js
+
+      - name: Rebuild derived artefacts
+        run: |
+          node tools/build-docs.js
+          node tools/build.js
+
+      - name: Summarise
+        id: sum
+        run: |
+          node -e "
+            const m = require('./data/reference/ingest-manifest.json');
+            const s = m.summary;
+            const live = Object.entries(m.sources).filter(([,v])=>v.ok)
+              .map(([k,v])=>k+' ('+v.asOf+')').join(', ');
+            const down = Object.entries(m.sources).filter(([,v])=>!v.ok).map(([k])=>k).join(', ');
+            const lines = [
+              '**'+s.sourcesLive+'/'+s.sourcesTotal+' sources live** — '+s.valueCount+
+              ' observed values across '+s.marketsCovered+' markets',
+              '', 'Live: '+(live||'none'), down ? 'Unreachable: '+down : ''
+            ].join('\n');
+            require('fs').appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines+'\n');
+            require('fs').writeFileSync('/tmp/msg.txt',
+              'Refresh market data: '+s.sourcesLive+'/'+s.sourcesTotal+' sources, '+s.valueCount+' observed values');
+          "
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/observed.js data/reference/ingest-manifest.json docs/ || true
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -F /tmp/msg.txt
+            git push
+          fi

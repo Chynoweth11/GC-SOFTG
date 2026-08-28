@@ -32,9 +32,28 @@ var U = (function () {
     return String(Math.round(v));
   }
 
-  /* -------------------------------------------------------------- colours */
-  var RAMP = ['#2d4257', '#2e7f96', '#2fae91', '#7cc95a', '#f0b83f', '#ff7a45'];
+  /* -------------------------------------------------------------- colours
+   * The ramp lives in CSS as --s0..--s5 so that light and dark resolve from
+   * one source of truth. Read once and cache; themeChanged() drops the cache. */
+  var RAMP_FALLBACK = ['#4a6fa5', '#3f9e8c', '#7fbf5a', '#e8b13c', '#df7a33', '#b8442a'];
   var STOPS = [0, 38, 52, 66, 78, 90];
+  var _ramp = null, _tok = {};
+
+  function cssvar(name, fallback) {
+    if (typeof document === 'undefined' || !document.documentElement) return fallback;
+    if (_tok[name] !== undefined) return _tok[name];
+    var v = '';
+    try { v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); } catch (e) {}
+    _tok[name] = v || fallback;
+    return _tok[name];
+  }
+  function ramp() {
+    if (_ramp) return _ramp;
+    _ramp = RAMP_FALLBACK.map(function (f, i) { return cssvar('--s' + i, f); });
+    return _ramp;
+  }
+  /** Call after the theme changes so colours re-resolve. */
+  function themeChanged() { _ramp = null; _tok = {}; }
 
   function hex2rgb(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
   function rgb2hex(c) {
@@ -43,17 +62,18 @@ var U = (function () {
 
   /** Continuous 0-100 -> ramp colour. */
   function scoreColor(v) {
-    if (v == null || isNaN(v)) return '#394453';
+    var R = ramp();
+    if (v == null || isNaN(v)) return cssvar('--ink-4', '#9aa0ab');
     v = Math.max(0, Math.min(100, v));
     for (var i = STOPS.length - 1; i >= 0; i--) {
       if (v >= STOPS[i]) {
-        if (i === STOPS.length - 1) return RAMP[i];
+        if (i === STOPS.length - 1) return R[i];
         var t = (v - STOPS[i]) / (STOPS[i + 1] - STOPS[i]);
-        var a = hex2rgb(RAMP[i]), b = hex2rgb(RAMP[i + 1]);
+        var a = hex2rgb(R[i]), b = hex2rgb(R[i + 1]);
         return rgb2hex([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
       }
     }
-    return RAMP[0];
+    return R[0];
   }
 
   /** Colour with a low-alpha fill, for score chips. */
@@ -77,14 +97,15 @@ var U = (function () {
 
   /* Confidence banding — a hard rule about what a score may be used for. */
   var CONF_BANDS = [
-    { min: 75, label: 'Underwriting-grade', desc: 'Sufficient to support a specific transaction decision.', color: '#3fd9ad' },
-    { min: 55, label: 'Analysis-grade', desc: 'Sufficient to build an investment case; verify key inputs before committing.', color: '#7cc95a' },
-    { min: 35, label: 'Screening-grade', desc: 'Sufficient to rank and shortlist markets. Not sufficient to underwrite.', color: '#f0b83f' },
-    { min: 0, label: 'Indicative', desc: 'Directional only. Treat every figure as a hypothesis to be tested.', color: '#ff7a45' }
+    { min: 75, label: 'Underwriting-grade', desc: 'Sufficient to support a specific transaction decision.', tok: '--pos', fb: '#12805c' },
+    { min: 55, label: 'Analysis-grade', desc: 'Sufficient to build an investment case; verify key inputs before committing.', tok: '--s2', fb: '#7fbf5a' },
+    { min: 35, label: 'Screening-grade', desc: 'Sufficient to rank and shortlist markets. Not sufficient to underwrite.', tok: '--warn', fb: '#a8710a' },
+    { min: 0, label: 'Indicative', desc: 'Directional only. Treat every figure as a hypothesis to be tested.', tok: '--neg', fb: '#c0392f' }
   ];
   function confBand(v) {
-    for (var i = 0; i < CONF_BANDS.length; i++) if (v >= CONF_BANDS[i].min) return CONF_BANDS[i];
-    return CONF_BANDS[CONF_BANDS.length - 1];
+    var b = CONF_BANDS[CONF_BANDS.length - 1];
+    for (var i = 0; i < CONF_BANDS.length; i++) if (v >= CONF_BANDS[i].min) { b = CONF_BANDS[i]; break; }
+    return { min: b.min, label: b.label, desc: b.desc, color: cssvar(b.tok, b.fb) };
   }
 
   /* ---------------------------------------------------------------- DOM */
@@ -131,7 +152,8 @@ var U = (function () {
   return {
     n0: n0, n1: n1, n2: n2, pct: pct, pctS: pctS, usd: usd, usdM: usdM, usdFull: usdFull, compact: compact,
     scoreColor: scoreColor, scoreChip: scoreChip, bar: bar, deltaHtml: deltaHtml,
-    RAMP: RAMP, CONF_BANDS: CONF_BANDS, confBand: confBand,
+    RAMP: ramp, ramp: ramp, cssvar: cssvar, themeChanged: themeChanged,
+    CONF_BANDS: CONF_BANDS, confBand: confBand,
     esc: esc, $: $, $$: $$, on: on, debounce: debounce,
     clamp: clamp, sum: sum, mean: mean, quantile: quantile, pctRank: pctRank, ordinal: ordinal
   };

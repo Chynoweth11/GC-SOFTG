@@ -335,10 +335,10 @@ var V_SIM = (function (ST, U, CH) {
         width: 560, height: 420, xDomain: [35, 78], yDomain: [25, 85], midX: 56, midY: 55,
         xLabel: 'LCDOS  →', yLabel: 'FIT FOR THIS COMPANY  →',
         quadrants: [
-          { x: 'lo', y: 'hi', label: 'Fits you, under-rated', color: '#f2b544' },
-          { x: 'hi', y: 'hi', label: 'Target', color: '#3fd9ad' },
-          { x: 'hi', y: 'lo', label: 'Good market, wrong company', color: '#5aa9f5' },
-          { x: 'lo', y: 'lo', label: 'Avoid', color: '#6c7d94' }
+          { x: 'lo', y: 'hi', label: 'Fits you, under-rated', color: U.cssvar('--s3', '#e8b13c') },
+          { x: 'hi', y: 'hi', label: 'Target', color: U.cssvar('--s1', '#3f9e8c') },
+          { x: 'hi', y: 'lo', label: 'Good market, wrong company', color: U.cssvar('--s0', '#4a6fa5') },
+          { x: 'lo', y: 'lo', label: 'Avoid', color: U.cssvar('--ink-3', '#767c87') }
         ]
       }) + '</div></div></div>';
   }
@@ -403,7 +403,7 @@ var V_SIM = (function (ST, U, CH) {
     }).sort(function (a, b) { return (b.pf.irr == null ? -9 : b.pf.irr) - (a.pf.irr == null ? -9 : a.pf.irr); });
 
     var cfSeries = [{
-      name: 'Equity cash flow', color: '#3fd9ad',
+      name: 'Equity cash flow', color: U.cssvar('--s1', '#3f9e8c'),
       points: pf.cf.map(function (v, i) { return { x: i, y: v / 1e6, kind: 'observed' }; })
     }];
 
@@ -427,12 +427,12 @@ var V_SIM = (function (ST, U, CH) {
       '<div class="gridcards g2 mb16">' +
       '<div class="panel"><header><h3>Sources & uses</h3></header><div class="pad">' +
       row('Land', d.landCost) + row('Infrastructure', d.infra) + row('Soft costs (' + d.softPct + '%)', pf.soft) +
-      '<div class="stat" style="border-top:1px solid var(--line-2)"><span class="sl"><b>Development cost</b></span><span class="sv"><b>' + U.usd(pf.devCost) + '</b></span></div>' +
+      '<div class="stat" style="border-top:1px solid var(--hairline-2)"><span class="sl"><b>Development cost</b></span><span class="sv"><b>' + U.usd(pf.devCost) + '</b></span></div>' +
       row('Cost per lot', pf.costPerLot) +
       row('Homebuilding (' + d.lots + ' × ' + U.usd(d.buildCost) + ')', pf.buildTotal) +
       row('Selling costs (' + d.sellPct + '%)', pf.selling) +
       row('Financing carry', pf.totalInterest) +
-      '<div class="stat" style="border-top:1px solid var(--line-2)"><span class="sl"><b>Total cost</b></span><span class="sv"><b>' + U.usd(pf.totalCost) + '</b></span></div>' +
+      '<div class="stat" style="border-top:1px solid var(--hairline-2)"><span class="sl"><b>Total cost</b></span><span class="sv"><b>' + U.usd(pf.totalCost) + '</b></span></div>' +
       '<div class="stat"><span class="sl">Gross revenue</span><span class="sv">' + U.usd(pf.revenue) + '</span></div>' +
       '<div class="stat"><span class="sl"><b>Gross profit</b></span><span class="sv up"><b>' + U.usd(pf.grossProfit) + '</b></span></div>' +
       '<div class="stat"><span class="sl"><b>Profit after financing</b></span><span class="sv ' + (pf.netProfit > 0 ? 'up' : 'down') + '"><b>' + U.usd(pf.netProfit) + '</b></span></div>' +
@@ -444,7 +444,7 @@ var V_SIM = (function (ST, U, CH) {
       '<div class="panel"><header><h3>Equity cash flow</h3><span class="tiny">$M by year</span></header><div class="pad">' +
       CH.lines(cfSeries, { width: 540, height: 210, xTicks: pf.cf.map(function (_, i) { return i; }), fmtY: function (v) { return U.n0(v); } }) +
       '<div class="sep"></div>' +
-      CH.vbars(pf.cf.map(function (v, i) { return { label: 'Y' + i, short: 'Y' + i, v: v / 1e6, color: v >= 0 ? '#3fd9ad' : '#f2545b' }; }),
+      CH.vbars(pf.cf.map(function (v, i) { return { label: 'Y' + i, short: 'Y' + i, v: v / 1e6, color: v >= 0 ? U.cssvar('--s1', '#3f9e8c') : U.cssvar('--s5', '#b8442a') }; }),
         { width: 540, height: 160, fmtY: function (v) { return U.n0(v); } }) +
       '</div></div></div>' +
 
@@ -479,13 +479,15 @@ var V_SIM = (function (ST, U, CH) {
   /* ------------------------------------------------------------------ shell */
   function render(root) {
     body = root;
+    if (tab === 'scenario') { V_SCENARIO.render(root); wireTabsOnly(root); return; }
     body.innerHTML = '<div class="rail">' +
-      '<div class="railsec"><h4>Simulator</h4><div class="chips">' +
-      '<button class="chip' + (tab === 'expansion' ? ' on' : '') + '" data-tab="expansion">Expansion</button>' +
-      '<button class="chip' + (tab === 'developer' ? ' on' : '') + '" data-tab="developer">Developer</button>' +
+      '<div class="railsec fsticky"><div class="modules fill">' +
+      '<button class="mod' + (tab === 'expansion' ? ' on' : '') + '" data-tab="expansion">Expansion</button>' +
+      '<button class="mod' + (tab === 'developer' ? ' on' : '') + '" data-tab="developer">Developer</button>' +
+      '<button class="mod' + (tab === 'scenario' ? ' on' : '') + '" data-tab="scenario">Scenario</button>' +
       '</div></div>' +
       (tab === 'expansion' ? expansionRail() : devRail()) + '</div>' +
-      '<div class="stage"><div class="scrollstage" style="padding:16px 18px 60px">' +
+      '<div class="stage"><div class="scrollstage viewfade" style="padding:24px 28px 72px">' +
       (tab === 'expansion' ? expansionStage() : devStage()) + '</div></div>';
     wire();
   }
@@ -495,6 +497,20 @@ var V_SIM = (function (ST, U, CH) {
     var y = st.scrollTop;
     st.innerHTML = tab === 'expansion' ? expansionStage() : devStage();
     st.scrollTop = y;
+  }
+
+  /* When Scenario is showing, only the tab switcher belongs to this module. */
+  function wireTabsOnly(root) {
+    var rail = root.querySelector('.rail');
+    if (rail) {
+      rail.insertAdjacentHTML('afterbegin',
+        '<div class="railsec fsticky"><div class="modules fill">' +
+        '<button class="mod" data-tab="expansion">Expansion</button>' +
+        '<button class="mod" data-tab="developer">Developer</button>' +
+        '<button class="mod on" data-tab="scenario">Scenario</button>' +
+        '</div></div>');
+    }
+    U.on(root, 'click', '[data-tab]', function (e, t) { tab = t.dataset.tab; render(root); });
   }
 
   function wire() {
@@ -536,5 +552,9 @@ var V_SIM = (function (ST, U, CH) {
   }
 
   return { render: render, fit: fit, proforma: proforma, FIT_WEIGHTS: FIT_WEIGHTS,
-    onEvent: function (w) { if (body && w === 'scenario') refreshStage(); } };
+    onEvent: function (w) {
+      if (!body) return;
+      if (tab === 'scenario') { if (V_SCENARIO.onEvent) V_SCENARIO.onEvent(w); return; }
+      if (w === 'scenario') refreshStage();
+    } };
 })(STORE, U, CH);

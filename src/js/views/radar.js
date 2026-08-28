@@ -56,7 +56,7 @@ var V_RADAR = (function (ST, U, CH) {
     if (!list.length) return '<div class="empty">No alerts match the current filters.</div>';
     return list.slice(0, 260).map(function (a) {
       return '<div class="alert sev' + a.sig.sev + '" style="margin-bottom:6px;cursor:pointer" data-id="' + a.market + '">' +
-        '<h5>' + (a.sig.kind === 'risk' ? '<span style="color:var(--red)">▲</span>' : '<span style="color:var(--teal)">●</span>') +
+        '<h5>' + (a.sig.kind === 'risk' ? '<span style="color:var(--neg)">▲</span>' : '<span style="color:var(--accent)">●</span>') +
         U.esc(a.sig.label) + '<span class="tag" style="margin-left:auto">' + U.esc(a.name) + '</span></h5>' +
         '<p>' + U.esc(a.sig.why) + '</p></div>';
     }).join('');
@@ -92,10 +92,10 @@ var V_RADAR = (function (ST, U, CH) {
       width: 980, height: 500, xDomain: [35, 80], yDomain: [20, 95], midX: 57, midY: 55,
       xLabel: 'LCDOS SCORE (level)  →', yLabel: 'MOMENTUM (rate of change)  →',
       quadrants: [
-        { x: 'lo', y: 'hi', label: 'Early — accelerating, not yet priced', color: '#ff7a45' },
-        { x: 'hi', y: 'hi', label: 'Compounding leaders', color: '#3fd9ad' },
-        { x: 'hi', y: 'lo', label: 'Established, slowing', color: '#5aa9f5' },
-        { x: 'lo', y: 'lo', label: 'Dormant', color: '#6c7d94' }
+        { x: 'lo', y: 'hi', label: 'Early — accelerating, not yet priced', color: U.cssvar('--s4', '#df7a33') },
+        { x: 'hi', y: 'hi', label: 'Compounding leaders', color: U.cssvar('--s1', '#3f9e8c') },
+        { x: 'hi', y: 'lo', label: 'Established, slowing', color: U.cssvar('--s0', '#4a6fa5') },
+        { x: 'lo', y: 'lo', label: 'Dormant', color: U.cssvar('--ink-3', '#767c87') }
       ]
     });
   }
@@ -116,6 +116,7 @@ var V_RADAR = (function (ST, U, CH) {
       }).join('') + '</div></div>' +
       '<div class="railsec"><h4>Signal type</h4><div class="chips">' +
       '<button class="chip' + (!filterRule ? ' on' : '') + '" data-rule="">All</button>' + ruleFilters() + '</div></div>' +
+      '</div>' +
 
       '<div class="stage"><div class="scrollstage" style="padding:16px 18px 60px">' +
       '<div class="mb16"><h2 style="margin:0;font-size:18px;font-weight:600">Emerging market radar</h2>' +
@@ -130,9 +131,9 @@ var V_RADAR = (function (ST, U, CH) {
       '</div>' +
 
       '<div class="gridcards g2">' +
-      '<div><h3 style="font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 10px">Flagged markets</h3>' +
+      '<div><h3 style="font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 10px">Flagged markets</h3>' +
       (fl.length ? fl.map(radarCard).join('') : '<div class="empty">No markets flagged under the current filters.</div>') + '</div>' +
-      '<div><h3 style="font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 10px">Signal feed</h3>' +
+      '<div><h3 style="font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 10px">Signal feed</h3>' +
       '<div id="feed">' + alertFeed() + '</div></div>' +
       '</div></div></div>';
     wire();

@@ -4,39 +4,67 @@
 (function (ST, U) {
   'use strict';
 
+  /* Seven top-level surfaces. Market and IC open contextually from any of
+   * them, so they are routable but not in the switcher. */
   var MODULES = [
-    { id: 'terminal', label: 'Terminal', view: function () { return V_TERMINAL; } },
+    { id: 'overview', label: 'Overview', view: function () { return V_OVERVIEW; } },
+    { id: 'map',      label: 'Map',      view: function () { return V_TERMINAL; } },
     { id: 'rankings', label: 'Rankings', view: function () { return V_RANKINGS; } },
-    { id: 'matrix', label: 'Matrix', view: function () { return V_MATRIX; } },
-    { id: 'radar', label: 'Radar', view: function () { return V_RADAR; } },
-    { id: 'compare', label: 'Compare', view: function () { return V_COMPARE; } },
-    { id: 'market', label: 'Market', view: function () { return V_MARKET; } },
-    { id: 'sim', label: 'Simulators', view: function () { return V_SIM; } },
-    { id: 'scenario', label: 'Scenario', view: function () { return V_SCENARIO; } },
-    { id: 'ic', label: 'IC Mode', view: function () { return V_IC; } },
-    { id: 'method', label: 'Methodology', view: function () { return V_METHOD; } }
+    { id: 'analysis', label: 'Analysis', view: function () { return V_ANALYSIS; } },
+    { id: 'compare',  label: 'Compare',  view: function () { return V_COMPARE; } },
+    { id: 'simulate', label: 'Simulate', view: function () { return V_SIM; } },
+    { id: 'method',   label: 'Method',   view: function () { return V_METHOD; } }
   ];
+  var CONTEXTUAL = [
+    { id: 'market', label: 'Market', view: function () { return V_MARKET; } },
+    { id: 'ic',     label: 'Investment thesis', view: function () { return V_IC; } }
+  ];
+  var ALL = MODULES.concat(CONTEXTUAL);
+
+  /* ------------------------------------------------------------- theme */
+  var THEMES = ['system', 'light', 'dark'];
+  var THEME_ICON = { system: '◐', light: '☀', dark: '☾' };
+  var theme = 'system';
+  try { theme = localStorage.getItem('lcdos.theme') || 'system'; } catch (e) {}
+
+  function applyTheme() {
+    var el = document.documentElement;
+    if (theme === 'system') el.removeAttribute('data-theme');
+    else el.setAttribute('data-theme', theme);
+    try { localStorage.setItem('lcdos.theme', theme); } catch (e) {}
+    if (U.themeChanged) U.themeChanged();
+  }
+  function cycleTheme() {
+    theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    applyTheme();
+    document.getElementById('topbar').innerHTML = topbar();
+    bindTopbar();
+    route();
+  }
 
   var bodyEl, current = null;
 
   function topbar() {
     var scOn = ST.S.scenarioOn && Object.keys(ST.S.scenario).some(function (k) { return ST.S.scenario[k]; });
-    var alerts = ST.DER.alerts.filter(function (a) { return a.sig.sev >= 3; }).length;
+    var nf = typeof FILTERS !== 'undefined' ? FILTERS.activeCount() : 0;
+    var ctx = CONTEXTUAL.filter(function (m) { return m.id === ST.S.view; })[0];
     return '<div class="brand"><div class="brand-mark">L</div><div class="brand-text">' +
-      '<b>LCDOS</b><span>Terminal v' + ST.MODEL.VERSION + '</span></div></div>' +
+      '<b>LCDOS</b></div></div>' +
       '<div class="modules">' + MODULES.map(function (m) {
         return '<button class="mod' + (ST.S.view === m.id ? ' on' : '') + '" data-view="' + m.id + '">' + U.esc(m.label) + '</button>';
       }).join('') + '</div>' +
+      (ctx ? '<span class="pill accent">' + U.esc(ctx.label) + '</span>' : '') +
       '<div class="topright">' +
-      '<button class="searchbtn" id="cmdbtn"><span>⌕</span><span>Search markets…</span><kbd>⌘K</kbd></button>' +
-      (scOn ? '<span class="pill hot">Scenario active</span>' : '') +
-      '<span class="pill warn">' + alerts + ' priority alerts</span>' +
-      '<span class="pill live">' + ST.DER.ranked.length + ' markets · ' + ST.DATA.AS_OF + '</span>' +
+      (nf ? '<span class="pill accent">' + nf + ' filter' + (nf > 1 ? 's' : '') + '</span>' : '') +
+      (scOn ? '<span class="pill hot">Scenario</span>' : '') +
+      '<button class="searchbtn" id="cmdbtn"><span aria-hidden="true">⌕</span><span>Search markets…</span><kbd>⌘K</kbd></button>' +
+      '<button class="iconbtn" id="themebtn" title="Theme: ' + theme + '" aria-label="Switch theme">' +
+      THEME_ICON[theme] + '</button>' +
       '</div>';
   }
 
   function route() {
-    var m = MODULES.filter(function (x) { return x.id === ST.S.view; })[0] || MODULES[0];
+    var m = ALL.filter(function (x) { return x.id === ST.S.view; })[0] || MODULES[0];
     current = m.view();
     bodyEl.innerHTML = '';
     current.render(bodyEl);
@@ -74,7 +102,7 @@
   function renderPal(q) {
     q = (q || '').toLowerCase().trim();
     var out = [];
-    MODULES.forEach(function (m) {
+    ALL.forEach(function (m) {
       if (!q || m.label.toLowerCase().indexOf(q) >= 0) out.push({ kind: 'module', id: m.id, title: m.label, sub: 'Module' });
     });
     ST.DER.ranked.forEach(function (r) {
@@ -106,7 +134,14 @@
     closePalette();
     if (r.kind === 'module') ST.set({ view: r.id }, 'view');
     else if (r.kind === 'market') { ST.selectMarket(r.id); ST.set({ view: 'market' }, 'view'); }
-    else if (r.kind === 'layer') { ST.S.layer = r.id; ST.set({ view: 'terminal' }, 'view'); }
+     if (r.kind === 'layer') { ST.S.layer = r.id; ST.set({ view: 'terminal' }, 'view'); }
+  }
+
+  function bindTopbar() {
+    var tb = document.getElementById('topbar');
+    U.on(tb, 'click', '[data-view]', function (e, t) { ST.set({ view: t.dataset.view }, 'view'); });
+    var cb = document.getElementById('cmdbtn'); if (cb) cb.addEventListener('click', openPalette);
+    var th = document.getElementById('themebtn'); if (th) th.addEventListener('click', cycleTheme);
   }
 
   /* ------------------------------------------------------------ bootstrap */
@@ -115,17 +150,15 @@
     bodyEl = document.getElementById('body');
 
     /* deep link */
+    applyTheme();
     var h = (location.hash || '').replace(/^#/, '').split('/');
-    if (h[0] && MODULES.some(function (m) { return m.id === h[0]; })) ST.S.view = h[0];
+    if (h[0] && ALL.some(function (m) { return m.id === h[0]; })) ST.S.view = h[0];
     if (h[1] && ST.get(h[1])) ST.S.selected = h[1];
     if (!ST.S.selected) ST.S.selected = ST.DER.ranked[0].id;
 
     route();
 
-    U.on(document.getElementById('topbar'), 'click', '[data-view]', function (e, t) {
-      ST.set({ view: t.dataset.view }, 'view');
-    });
-    document.getElementById('cmdbtn').addEventListener('click', openPalette);
+    bindTopbar();
 
     document.addEventListener('keydown', function (e) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
@@ -137,15 +170,15 @@
     });
 
     ST.sub(function (what) {
-      if (what === 'view') { route(); document.getElementById('topbar').innerHTML = topbar(); }
+      if (what === 'view') { route(); document.getElementById('topbar').innerHTML = topbar(); bindTopbar(); }
       else if (what === 'scenario') {
-        document.getElementById('topbar').innerHTML = topbar();
+        document.getElementById('topbar').innerHTML = topbar(); bindTopbar();
         if (current && current.onEvent) current.onEvent('scenario');
       } else if (current && current.onEvent) current.onEvent(what);
     });
 
     window.addEventListener('resize', U.debounce(function () {
-      if (ST.S.view === 'terminal' && current) current.render(bodyEl);
+      if (ST.S.view === 'map' && current) current.render(bodyEl);
     }, 220));
   }
 

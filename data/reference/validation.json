@@ -1,0 +1,1266 @@
+[
+  {
+    "id": "heber-wasatch",
+    "name": "Heber Valley & Wasatch Back",
+    "fips": "49051",
+    "declared": "Wasatch County",
+    "scope": "county",
+    "lat": 40.507,
+    "lon": -111.413,
+    "official": "Wasatch County, UT",
+    "miles": 0,
+    "centroid": {
+      "lon": -111.412248,
+      "lat": 40.505696
+    },
+    "status": "ok"
+  },
+  {
+    "id": "park-city",
+    "name": "Park City & Snyderville Basin",
+    "fips": "49043",
+    "declared": "Summit County",
+    "scope": "county",
+    "lat": 40.646,
+    "lon": -111.498,
+    "official": "Summit County, UT",
+    "miles": 6,
+    "centroid": {
+      "lon": -111.47076,
+      "lat": 40.727812
+    },
+    "status": "ok"
+  },
+  {
+    "id": "ogden-valley",
+    "name": "Ogden Valley & Powder Mountain",
+    "fips": "49057",
+    "declared": "Weber County",
+    "scope": "sub",
+    "lat": 41.298,
+    "lon": -111.777,
+    "official": "Weber County, UT",
+    "miles": 12,
+    "centroid": {
+      "lon": -111.990305,
+      "lat": 41.224614
+    },
+    "status": "ok"
+  },
+  {
+    "id": "st-george",
+    "name": "St. George & Greater Zion",
+    "fips": "49053",
+    "declared": "Washington County",
+    "scope": "county",
+    "lat": 37.096,
+    "lon": -113.568,
+    "official": "Washington County, UT",
+    "miles": 4,
+    "centroid": {
+      "lon": -113.519705,
+      "lat": 37.135163
+    },
+    "status": "ok"
+  },
+  {
+    "id": "bozeman",
+    "name": "Bozeman & the Gallatin Valley",
+    "fips": "30031",
+    "declared": "Gallatin County",
+    "scope": "county",
+    "lat": 45.68,
+    "lon": -111.038,
+    "official": "Gallatin County, MT",
+    "miles": 4,
+    "centroid": {
+      "lon": -111.128283,
+      "lat": 45.682805
+    },
+    "status": "ok"
+  },
+  {
+    "id": "big-sky",
+    "name": "Big Sky, Moonlight & Yellowstone Club",
+    "fips": "30031",
+    "declared": "Madison & Gallatin Counties",
+    "scope": "sub",
+    "lat": 45.284,
+    "lon": -111.401,
+    "official": "Gallatin County, MT",
+    "miles": 31,
+    "centroid": {
+      "lon": -111.128283,
+      "lat": 45.682805
+    },
+    "status": "ok"
+  },
+  {
+    "id": "whitefish",
+    "name": "Whitefish & the Flathead Valley",
+    "fips": "30029",
+    "declared": "Flathead County",
+    "scope": "county",
+    "lat": 48.411,
+    "lon": -114.337,
+    "official": "Flathead County, MT",
+    "miles": 12,
+    "centroid": {
+      "lon": -114.279524,
+      "lat": 48.247204
+    },
+    "status": "ok"
+  },
+  {
+    "id": "missoula",
+    "name": "Missoula & the Bitterroot",
+    "fips": "30063",
+    "declared": "Missoula County",
+    "scope": "county",
+    "lat": 46.872,
+    "lon": -113.994,
+    "official": "Missoula County, MT",
+    "miles": 1,
+    "centroid": {
+      "lon": -114.019007,
+      "lat": 46.875472
+    },
+    "status": "ok"
+  },
+  {
+    "id": "jackson-hole",
+    "name": "Jackson Hole",
+    "fips": "56039",
+    "declared": "Teton County",
+    "scope": "county",
+    "lat": 43.479,
+    "lon": -110.762,
+    "official": "Teton County, WY",
+    "miles": 2,
+    "centroid": {
+      "lon": -110.784353,
+      "lat": 43.494174
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sheridan-wy",
+    "name": "Sheridan & the Bighorns",
+    "fips": "56033",
+    "declared": "Sheridan County",
+    "scope": "county",
+    "lat": 44.797,
+    "lon": -106.956,
+    "official": "Sheridan County, WY",
+    "miles": 1,
+    "centroid": {
+      "lon": -106.974338,
+      "lat": 44.781091
+    },
+    "status": "ok"
+  },
+  {
+    "id": "cda",
+    "name": "Coeur d'Alene & North Idaho",
+    "fips": "16055",
+    "declared": "Kootenai County",
+    "scope": "county",
+    "lat": 47.678,
+    "lon": -116.78,
+    "official": "Kootenai County, ID",
+    "miles": 5,
+    "centroid": {
+      "lon": -116.832581,
+      "lat": 47.73713
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sandpoint",
+    "name": "Sandpoint & Lake Pend Oreille",
+    "fips": "16017",
+    "declared": "Bonner County",
+    "scope": "county",
+    "lat": 48.276,
+    "lon": -116.553,
+    "official": "Bonner County, ID",
+    "miles": 5,
+    "centroid": {
+      "lon": -116.630982,
+      "lat": 48.235649
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sun-valley",
+    "name": "Sun Valley & Ketchum",
+    "fips": "16013",
+    "declared": "Blaine County",
+    "scope": "county",
+    "lat": 43.697,
+    "lon": -114.352,
+    "official": "Blaine County, ID",
+    "miles": 11,
+    "centroid": {
+      "lon": -114.294277,
+      "lat": 43.541366
+    },
+    "status": "ok"
+  },
+  {
+    "id": "mccall",
+    "name": "McCall & Payette Lakes",
+    "fips": "16085",
+    "declared": "Valley County",
+    "scope": "county",
+    "lat": 44.911,
+    "lon": -116.099,
+    "official": "Valley County, ID",
+    "miles": 11,
+    "centroid": {
+      "lon": -116.073719,
+      "lat": 44.758677
+    },
+    "status": "ok"
+  },
+  {
+    "id": "boise",
+    "name": "Boise, Eagle & the Treasure Valley",
+    "fips": "16001",
+    "declared": "Ada County",
+    "scope": "county",
+    "lat": 43.615,
+    "lon": -116.202,
+    "official": "Ada County, ID",
+    "miles": 5,
+    "centroid": {
+      "lon": -116.304409,
+      "lat": 43.611186
+    },
+    "status": "ok"
+  },
+  {
+    "id": "aspen",
+    "name": "Aspen & the Roaring Fork",
+    "fips": "08097",
+    "declared": "Pitkin County",
+    "scope": "county",
+    "lat": 39.191,
+    "lon": -106.818,
+    "official": "Pitkin County, CO",
+    "miles": 6,
+    "centroid": {
+      "lon": -106.907765,
+      "lat": 39.232543
+    },
+    "status": "ok"
+  },
+  {
+    "id": "vail",
+    "name": "Vail Valley & Eagle County",
+    "fips": "08037",
+    "declared": "Eagle County",
+    "scope": "county",
+    "lat": 39.64,
+    "lon": -106.374,
+    "official": "Eagle County, CO",
+    "miles": 19,
+    "centroid": {
+      "lon": -106.717771,
+      "lat": 39.599453
+    },
+    "status": "ok"
+  },
+  {
+    "id": "steamboat",
+    "name": "Steamboat Springs & Routt County",
+    "fips": "08107",
+    "declared": "Routt County",
+    "scope": "county",
+    "lat": 40.485,
+    "lon": -106.831,
+    "official": "Routt County, CO",
+    "miles": 4,
+    "centroid": {
+      "lon": -106.899535,
+      "lat": 40.453133
+    },
+    "status": "ok"
+  },
+  {
+    "id": "telluride",
+    "name": "Telluride & San Miguel County",
+    "fips": "08113",
+    "declared": "San Miguel County",
+    "scope": "county",
+    "lat": 37.937,
+    "lon": -107.812,
+    "official": "San Miguel County, CO",
+    "miles": 8,
+    "centroid": {
+      "lon": -107.960034,
+      "lat": 37.974202
+    },
+    "status": "ok"
+  },
+  {
+    "id": "crested-butte",
+    "name": "Crested Butte & the Gunnison Valley",
+    "fips": "08051",
+    "declared": "Gunnison County",
+    "scope": "county",
+    "lat": 38.869,
+    "lon": -106.988,
+    "official": "Gunnison County, CO",
+    "miles": 15,
+    "centroid": {
+      "lon": -106.944723,
+      "lat": 38.657886
+    },
+    "status": "ok"
+  },
+  {
+    "id": "summit-co",
+    "name": "Breckenridge & Summit County",
+    "fips": "08117",
+    "declared": "Summit County",
+    "scope": "county",
+    "lat": 39.482,
+    "lon": -106.039,
+    "official": "Summit County, CO",
+    "miles": 6,
+    "centroid": {
+      "lon": -106.054579,
+      "lat": 39.573131
+    },
+    "status": "ok"
+  },
+  {
+    "id": "durango",
+    "name": "Durango & the Animas Valley",
+    "fips": "08067",
+    "declared": "La Plata County",
+    "scope": "county",
+    "lat": 37.275,
+    "lon": -107.88,
+    "official": "La Plata County, CO",
+    "miles": 4,
+    "centroid": {
+      "lon": -107.806184,
+      "lat": 37.265198
+    },
+    "status": "ok"
+  },
+  {
+    "id": "boulder",
+    "name": "Boulder & the Front Range Foothills",
+    "fips": "08013",
+    "declared": "Boulder County",
+    "scope": "county",
+    "lat": 40.015,
+    "lon": -105.271,
+    "official": "Boulder County, CO",
+    "miles": 6,
+    "centroid": {
+      "lon": -105.183981,
+      "lat": 40.063299
+    },
+    "status": "ok"
+  },
+  {
+    "id": "truckee-tahoe",
+    "name": "Truckee & North Lake Tahoe",
+    "fips": "06057",
+    "declared": "Nevada & Placer Counties",
+    "scope": "sub",
+    "lat": 39.328,
+    "lon": -120.183,
+    "official": "Nevada County, CA",
+    "miles": 40,
+    "centroid": {
+      "lon": -120.916546,
+      "lat": 39.219524
+    },
+    "status": "ok"
+  },
+  {
+    "id": "reno-tahoe",
+    "name": "Reno, Incline Village & Douglas",
+    "fips": "32031",
+    "declared": "Washoe & Douglas Counties",
+    "scope": "county",
+    "lat": 39.53,
+    "lon": -119.814,
+    "official": "Washoe County, NV",
+    "miles": 1,
+    "centroid": {
+      "lon": -119.795493,
+      "lat": 39.535558
+    },
+    "status": "ok"
+  },
+  {
+    "id": "santa-fe",
+    "name": "Santa Fe",
+    "fips": "35049",
+    "declared": "Santa Fe County",
+    "scope": "county",
+    "lat": 35.687,
+    "lon": -105.938,
+    "official": "Santa Fe County, NM",
+    "miles": 5,
+    "centroid": {
+      "lon": -106.004953,
+      "lat": 35.630805
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sedona",
+    "name": "Sedona & the Verde Valley",
+    "fips": "04025",
+    "declared": "Yavapai & Coconino Counties",
+    "scope": "sub",
+    "lat": 34.87,
+    "lon": -111.761,
+    "official": "Yavapai County, AZ",
+    "miles": 33,
+    "centroid": {
+      "lon": -112.267767,
+      "lat": 34.629014
+    },
+    "status": "ok"
+  },
+  {
+    "id": "scottsdale",
+    "name": "Scottsdale & Paradise Valley",
+    "fips": "04013",
+    "declared": "Maricopa County",
+    "scope": "sub",
+    "lat": 33.494,
+    "lon": -111.926,
+    "official": "Maricopa County, AZ",
+    "miles": 7,
+    "centroid": {
+      "lon": -112.04143,
+      "lat": 33.493403
+    },
+    "status": "ok"
+  },
+  {
+    "id": "flagstaff",
+    "name": "Flagstaff & Northern Arizona",
+    "fips": "04005",
+    "declared": "Coconino County",
+    "scope": "county",
+    "lat": 35.198,
+    "lon": -111.651,
+    "official": "Coconino County, AZ",
+    "miles": 22,
+    "centroid": {
+      "lon": -111.590056,
+      "lat": 35.514426
+    },
+    "status": "ok"
+  },
+  {
+    "id": "bend",
+    "name": "Bend & Central Oregon",
+    "fips": "41017",
+    "declared": "Deschutes County",
+    "scope": "county",
+    "lat": 44.058,
+    "lon": -121.315,
+    "official": "Deschutes County, OR",
+    "miles": 2,
+    "centroid": {
+      "lon": -121.30565,
+      "lat": 44.092071
+    },
+    "status": "ok"
+  },
+  {
+    "id": "montecito",
+    "name": "Montecito & Santa Barbara",
+    "fips": "06083",
+    "declared": "Santa Barbara County",
+    "scope": "sub",
+    "lat": 34.437,
+    "lon": -119.632,
+    "official": "Santa Barbara County, CA",
+    "miles": 30,
+    "centroid": {
+      "lon": -120.092602,
+      "lat": 34.639262
+    },
+    "status": "ok"
+  },
+  {
+    "id": "napa-sonoma",
+    "name": "Napa & Sonoma Valley",
+    "fips": "06055",
+    "declared": "Napa County",
+    "scope": "county",
+    "lat": 38.508,
+    "lon": -122.47,
+    "official": "Napa County, CA",
+    "miles": 15,
+    "centroid": {
+      "lon": -122.321646,
+      "lat": 38.329075
+    },
+    "status": "ok"
+  },
+  {
+    "id": "carmel",
+    "name": "Carmel, Pebble Beach & Monterey",
+    "fips": "06053",
+    "declared": "Monterey County",
+    "scope": "sub",
+    "lat": 36.555,
+    "lon": -121.923,
+    "official": "Monterey County, CA",
+    "miles": 16,
+    "centroid": {
+      "lon": -121.646162,
+      "lat": 36.611722
+    },
+    "status": "ok"
+  },
+  {
+    "id": "palm-springs",
+    "name": "Palm Springs & the Coachella Valley",
+    "fips": "06065",
+    "declared": "Riverside County",
+    "scope": "sub",
+    "lat": 33.83,
+    "lon": -116.545,
+    "official": "Riverside County, CA",
+    "miles": 30,
+    "centroid": {
+      "lon": -117.066205,
+      "lat": 33.800439
+    },
+    "status": "ok"
+  },
+  {
+    "id": "san-juan-islands",
+    "name": "San Juan Islands",
+    "fips": "53055",
+    "declared": "San Juan County",
+    "scope": "county",
+    "lat": 48.535,
+    "lon": -123.02,
+    "official": "San Juan County, WA",
+    "miles": 3,
+    "centroid": {
+      "lon": -122.980165,
+      "lat": 48.576187
+    },
+    "status": "ok"
+  },
+  {
+    "id": "chelan-leavenworth",
+    "name": "Lake Chelan & Leavenworth",
+    "fips": "53007",
+    "declared": "Chelan County",
+    "scope": "county",
+    "lat": 47.839,
+    "lon": -120.017,
+    "official": "Chelan County, WA",
+    "miles": 26,
+    "centroid": {
+      "lon": -120.344707,
+      "lat": 47.530217
+    },
+    "status": "ok"
+  },
+  {
+    "id": "maui",
+    "name": "Wailea, Kapalua & Maui",
+    "fips": "15009",
+    "declared": "Maui County",
+    "scope": "county",
+    "lat": 20.798,
+    "lon": -156.332,
+    "official": "Maui County, HI",
+    "miles": 11,
+    "centroid": {
+      "lon": -156.493816,
+      "lat": 20.863747
+    },
+    "status": "ok"
+  },
+  {
+    "id": "30a-walton",
+    "name": "30A & South Walton",
+    "fips": "12131",
+    "declared": "Walton County",
+    "scope": "county",
+    "lat": 30.324,
+    "lon": -86.176,
+    "official": "Walton County, FL",
+    "miles": 18,
+    "centroid": {
+      "lon": -86.190665,
+      "lat": 30.583729
+    },
+    "status": "ok"
+  },
+  {
+    "id": "naples",
+    "name": "Naples & Collier County",
+    "fips": "12021",
+    "declared": "Collier County",
+    "scope": "county",
+    "lat": 26.142,
+    "lon": -81.795,
+    "official": "Collier County, FL",
+    "miles": 7,
+    "centroid": {
+      "lon": -81.699625,
+      "lat": 26.199831
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sarasota-lwr",
+    "name": "Sarasota & Lakewood Ranch",
+    "fips": "12115",
+    "declared": "Sarasota & Manatee Counties",
+    "scope": "county",
+    "lat": 27.336,
+    "lon": -82.531,
+    "official": "Sarasota County, FL",
+    "miles": 11,
+    "centroid": {
+      "lon": -82.423893,
+      "lat": 27.208205
+    },
+    "status": "ok"
+  },
+  {
+    "id": "palm-beach",
+    "name": "Palm Beach, Jupiter Island & Wellington",
+    "fips": "12099",
+    "declared": "Palm Beach County",
+    "scope": "county",
+    "lat": 26.706,
+    "lon": -80.037,
+    "official": "Palm Beach County, FL",
+    "miles": 9,
+    "centroid": {
+      "lon": -80.146119,
+      "lat": 26.617075
+    },
+    "status": "ok"
+  },
+  {
+    "id": "miami-gables",
+    "name": "Miami, Coral Gables & Key Biscayne",
+    "fips": "12086",
+    "declared": "Miami-Dade County",
+    "scope": "county",
+    "lat": 25.761,
+    "lon": -80.192,
+    "official": "Miami-Dade County, FL",
+    "miles": 7,
+    "centroid": {
+      "lon": -80.298888,
+      "lat": 25.774565
+    },
+    "status": "ok"
+  },
+  {
+    "id": "vero-beach",
+    "name": "Vero Beach & Indian River",
+    "fips": "12061",
+    "declared": "Indian River County",
+    "scope": "county",
+    "lat": 27.639,
+    "lon": -80.397,
+    "official": "Indian River County, FL",
+    "miles": 4,
+    "centroid": {
+      "lon": -80.440581,
+      "lat": 27.671827
+    },
+    "status": "ok"
+  },
+  {
+    "id": "ponte-vedra",
+    "name": "Ponte Vedra, Nocatee & St. Johns",
+    "fips": "12109",
+    "declared": "St. Johns County",
+    "scope": "county",
+    "lat": 30.24,
+    "lon": -81.386,
+    "official": "St. Johns County, FL",
+    "miles": 18,
+    "centroid": {
+      "lon": -81.421504,
+      "lat": 29.977088
+    },
+    "status": "ok"
+  },
+  {
+    "id": "amelia-island",
+    "name": "Amelia Island & Nassau County",
+    "fips": "12089",
+    "declared": "Nassau County",
+    "scope": "county",
+    "lat": 30.669,
+    "lon": -81.462,
+    "official": "Nassau County, FL",
+    "miles": 12,
+    "centroid": {
+      "lon": -81.647153,
+      "lat": 30.607962
+    },
+    "status": "ok"
+  },
+  {
+    "id": "boca-grande",
+    "name": "Boca Grande, Sanibel & the Islands",
+    "fips": "12071",
+    "declared": "Lee & Charlotte Counties",
+    "scope": "sub",
+    "lat": 26.749,
+    "lon": -82.264,
+    "official": "Lee County, FL",
+    "miles": 28,
+    "centroid": {
+      "lon": -81.858144,
+      "lat": 26.574992
+    },
+    "status": "ok"
+  },
+  {
+    "id": "destin",
+    "name": "Destin & Miramar Beach",
+    "fips": "12091",
+    "declared": "Okaloosa County",
+    "scope": "county",
+    "lat": 30.394,
+    "lon": -86.496,
+    "official": "Okaloosa County, FL",
+    "miles": 11,
+    "centroid": {
+      "lon": -86.567105,
+      "lat": 30.542829
+    },
+    "status": "ok"
+  },
+  {
+    "id": "charleston",
+    "name": "Charleston, Kiawah & Daniel Island",
+    "fips": "45019",
+    "declared": "Charleston County",
+    "scope": "county",
+    "lat": 32.777,
+    "lon": -79.931,
+    "official": "Charleston County, SC",
+    "miles": 4,
+    "centroid": {
+      "lon": -79.979214,
+      "lat": 32.822801
+    },
+    "status": "ok"
+  },
+  {
+    "id": "hilton-head",
+    "name": "Hilton Head, Bluffton & Palmetto Bluff",
+    "fips": "45013",
+    "declared": "Beaufort County",
+    "scope": "county",
+    "lat": 32.216,
+    "lon": -80.752,
+    "official": "Beaufort County, SC",
+    "miles": 8,
+    "centroid": {
+      "lon": -80.77157,
+      "lat": 32.323566
+    },
+    "status": "ok"
+  },
+  {
+    "id": "greenville-sc",
+    "name": "Greenville & the Upstate",
+    "fips": "45045",
+    "declared": "Greenville County",
+    "scope": "county",
+    "lat": 34.853,
+    "lon": -82.394,
+    "official": "Greenville County, SC",
+    "miles": 3,
+    "centroid": {
+      "lon": -82.335536,
+      "lat": 34.847691
+    },
+    "status": "ok"
+  },
+  {
+    "id": "lake-keowee",
+    "name": "Lake Keowee & the Cliffs",
+    "fips": "45073",
+    "declared": "Oconee & Pickens Counties",
+    "scope": "county",
+    "lat": 34.826,
+    "lon": -82.909,
+    "official": "Oconee County, SC",
+    "miles": 10,
+    "centroid": {
+      "lon": -83.005464,
+      "lat": 34.707761
+    },
+    "status": "ok"
+  },
+  {
+    "id": "aiken",
+    "name": "Aiken & the Horse Country",
+    "fips": "45003",
+    "declared": "Aiken County",
+    "scope": "county",
+    "lat": 33.56,
+    "lon": -81.72,
+    "official": "Aiken County, SC",
+    "miles": 3,
+    "centroid": {
+      "lon": -81.769514,
+      "lat": 33.535417
+    },
+    "status": "ok"
+  },
+  {
+    "id": "sea-island",
+    "name": "Sea Island & St. Simons",
+    "fips": "13127",
+    "declared": "Glynn County",
+    "scope": "county",
+    "lat": 31.196,
+    "lon": -81.335,
+    "official": "Glynn County, GA",
+    "miles": 9,
+    "centroid": {
+      "lon": -81.486488,
+      "lat": 31.202698
+    },
+    "status": "ok"
+  },
+  {
+    "id": "cashiers-highlands",
+    "name": "Cashiers & the Highlands Plateau",
+    "fips": "37099",
+    "declared": "Jackson & Macon Counties",
+    "scope": "sub",
+    "lat": 35.098,
+    "lon": -83.098,
+    "official": "Jackson County, NC",
+    "miles": 17,
+    "centroid": {
+      "lon": -83.202489,
+      "lat": 35.335275
+    },
+    "status": "ok"
+  },
+  {
+    "id": "asheville",
+    "name": "Asheville & Biltmore Forest",
+    "fips": "37021",
+    "declared": "Buncombe County",
+    "scope": "county",
+    "lat": 35.595,
+    "lon": -82.552,
+    "official": "Buncombe County, NC",
+    "miles": 1,
+    "centroid": {
+      "lon": -82.550087,
+      "lat": 35.587674
+    },
+    "status": "ok"
+  },
+  {
+    "id": "blowing-rock",
+    "name": "Blowing Rock & Banner Elk",
+    "fips": "37189",
+    "declared": "Watauga & Avery Counties",
+    "scope": "county",
+    "lat": 36.135,
+    "lon": -81.678,
+    "official": "Watauga County, NC",
+    "miles": 6,
+    "centroid": {
+      "lon": -81.685479,
+      "lat": 36.220299
+    },
+    "status": "ok"
+  },
+  {
+    "id": "lake-norman",
+    "name": "Lake Norman & North Charlotte",
+    "fips": "37097",
+    "declared": "Iredell & Mecklenburg Counties",
+    "scope": "county",
+    "lat": 35.492,
+    "lon": -80.899,
+    "official": "Iredell County, NC",
+    "miles": 15,
+    "centroid": {
+      "lon": -80.869103,
+      "lat": 35.707328
+    },
+    "status": "ok"
+  },
+  {
+    "id": "wilmington-nc",
+    "name": "Wilmington & Figure Eight Island",
+    "fips": "37129",
+    "declared": "New Hanover County",
+    "scope": "county",
+    "lat": 34.226,
+    "lon": -77.945,
+    "official": "New Hanover County, NC",
+    "miles": 4,
+    "centroid": {
+      "lon": -77.879277,
+      "lat": 34.211687
+    },
+    "status": "ok"
+  },
+  {
+    "id": "fairhope",
+    "name": "Fairhope & the Eastern Shore",
+    "fips": "01003",
+    "declared": "Baldwin County",
+    "scope": "county",
+    "lat": 30.523,
+    "lon": -87.903,
+    "official": "Baldwin County, AL",
+    "miles": 9,
+    "centroid": {
+      "lon": -87.762381,
+      "lat": 30.548923
+    },
+    "status": "ok"
+  },
+  {
+    "id": "austin-hill",
+    "name": "Austin & the Hill Country",
+    "fips": "48453",
+    "declared": "Travis County",
+    "scope": "county",
+    "lat": 30.267,
+    "lon": -97.743,
+    "official": "Travis County, TX",
+    "miles": 3,
+    "centroid": {
+      "lon": -97.749981,
+      "lat": 30.31025
+    },
+    "status": "ok"
+  },
+  {
+    "id": "fredericksburg",
+    "name": "Fredericksburg & the Texas Hill Country",
+    "fips": "48171",
+    "declared": "Gillespie County",
+    "scope": "county",
+    "lat": 30.275,
+    "lon": -98.872,
+    "official": "Gillespie County, TX",
+    "miles": 2,
+    "centroid": {
+      "lon": -98.905778,
+      "lat": 30.272524
+    },
+    "status": "ok"
+  },
+  {
+    "id": "dallas-park-cities",
+    "name": "Dallas Park Cities & Westlake",
+    "fips": "48113",
+    "declared": "Dallas & Tarrant Counties",
+    "scope": "sub",
+    "lat": 32.836,
+    "lon": -96.803,
+    "official": "Dallas County, TX",
+    "miles": 2,
+    "centroid": {
+      "lon": -96.788197,
+      "lat": 32.808956
+    },
+    "status": "ok"
+  },
+  {
+    "id": "houston-woodlands",
+    "name": "Houston, Memorial & The Woodlands",
+    "fips": "48201",
+    "declared": "Harris & Montgomery Counties",
+    "scope": "sub",
+    "lat": 29.76,
+    "lon": -95.37,
+    "official": "Harris County, TX",
+    "miles": 4,
+    "centroid": {
+      "lon": -95.417454,
+      "lat": 29.807479
+    },
+    "status": "ok"
+  },
+  {
+    "id": "bentonville",
+    "name": "Bentonville & Northwest Arkansas",
+    "fips": "05007",
+    "declared": "Benton County",
+    "scope": "county",
+    "lat": 36.372,
+    "lon": -94.208,
+    "official": "Benton County, AR",
+    "miles": 3,
+    "centroid": {
+      "lon": -94.230543,
+      "lat": 36.337348
+    },
+    "status": "ok"
+  },
+  {
+    "id": "nashville",
+    "name": "Nashville & Belle Meade",
+    "fips": "47037",
+    "declared": "Davidson County",
+    "scope": "county",
+    "lat": 36.163,
+    "lon": -86.781,
+    "official": "Davidson County, TN",
+    "miles": 3,
+    "centroid": {
+      "lon": -86.74545,
+      "lat": 36.140596
+    },
+    "status": "ok"
+  },
+  {
+    "id": "franklin-tn",
+    "name": "Franklin & Williamson County",
+    "fips": "47187",
+    "declared": "Williamson County",
+    "scope": "county",
+    "lat": 35.925,
+    "lon": -86.869,
+    "official": "Williamson County, TN",
+    "miles": 1,
+    "centroid": {
+      "lon": -86.85552,
+      "lat": 35.920355
+    },
+    "status": "ok"
+  },
+  {
+    "id": "chattanooga",
+    "name": "Chattanooga & Lookout Mountain",
+    "fips": "47065",
+    "declared": "Hamilton County",
+    "scope": "county",
+    "lat": 35.046,
+    "lon": -85.31,
+    "official": "Hamilton County, TN",
+    "miles": 7,
+    "centroid": {
+      "lon": -85.205177,
+      "lat": 35.093485
+    },
+    "status": "ok"
+  },
+  {
+    "id": "nantucket",
+    "name": "Nantucket",
+    "fips": "25019",
+    "declared": "Nantucket County",
+    "scope": "county",
+    "lat": 41.284,
+    "lon": -70.1,
+    "official": "Nantucket County, MA",
+    "miles": 1,
+    "centroid": {
+      "lon": -70.09112,
+      "lat": 41.267912
+    },
+    "status": "ok"
+  },
+  {
+    "id": "marthas-vineyard",
+    "name": "Martha's Vineyard",
+    "fips": "25007",
+    "declared": "Dukes County",
+    "scope": "county",
+    "lat": 41.389,
+    "lon": -70.612,
+    "official": "Dukes County, MA",
+    "miles": 2,
+    "centroid": {
+      "lon": -70.602745,
+      "lat": 41.421286
+    },
+    "status": "ok"
+  },
+  {
+    "id": "cape-cod",
+    "name": "Cape Cod",
+    "fips": "25001",
+    "declared": "Barnstable County",
+    "scope": "county",
+    "lat": 41.679,
+    "lon": -70.294,
+    "official": "Barnstable County, MA",
+    "miles": 2,
+    "centroid": {
+      "lon": -70.333968,
+      "lat": 41.690216
+    },
+    "status": "ok"
+  },
+  {
+    "id": "greenwich",
+    "name": "Greenwich & Fairfield County",
+    "fips": "09001",
+    "declared": "Fairfield County",
+    "scope": "county",
+    "lat": 41.027,
+    "lon": -73.629,
+    "official": "Fairfield County, CT",
+    "miles": 19,
+    "centroid": {
+      "lon": -73.364521,
+      "lat": 41.207889
+    },
+    "status": "ok"
+  },
+  {
+    "id": "hamptons",
+    "name": "The Hamptons & the East End",
+    "fips": "36103",
+    "declared": "Suffolk County",
+    "scope": "sub",
+    "lat": 40.963,
+    "lon": -72.184,
+    "official": "Suffolk County, NY",
+    "miles": 50,
+    "centroid": {
+      "lon": -73.113775,
+      "lat": 40.821924
+    },
+    "status": "ok"
+  },
+  {
+    "id": "newport-ri",
+    "name": "Newport & Aquidneck Island",
+    "fips": "44005",
+    "declared": "Newport County",
+    "scope": "county",
+    "lat": 41.49,
+    "lon": -71.313,
+    "official": "Newport County, RI",
+    "miles": 5,
+    "centroid": {
+      "lon": -71.266661,
+      "lat": 41.548265
+    },
+    "status": "ok"
+  },
+  {
+    "id": "camden-me",
+    "name": "Camden, Mount Desert & Midcoast Maine",
+    "fips": "23013",
+    "declared": "Knox & Hancock Counties",
+    "scope": "county",
+    "lat": 44.21,
+    "lon": -69.065,
+    "official": "Knox County, ME",
+    "miles": 7,
+    "centroid": {
+      "lon": -69.162849,
+      "lat": 44.129786
+    },
+    "status": "ok"
+  },
+  {
+    "id": "charlottesville",
+    "name": "Charlottesville & Keswick",
+    "fips": "51003",
+    "declared": "Albemarle County",
+    "scope": "county",
+    "lat": 38.03,
+    "lon": -78.478,
+    "official": "Albemarle County, VA",
+    "miles": 3,
+    "centroid": {
+      "lon": -78.516763,
+      "lat": 38.05016
+    },
+    "status": "ok"
+  },
+  {
+    "id": "lake-geneva",
+    "name": "Lake Geneva & Walworth County",
+    "fips": "55127",
+    "declared": "Walworth County",
+    "scope": "county",
+    "lat": 42.592,
+    "lon": -88.433,
+    "official": "Walworth County, WI",
+    "miles": 7,
+    "centroid": {
+      "lon": -88.540668,
+      "lat": 42.664074
+    },
+    "status": "ok"
+  },
+  {
+    "id": "door-county",
+    "name": "Door County",
+    "fips": "55029",
+    "declared": "Door County",
+    "scope": "county",
+    "lat": 45.089,
+    "lon": -87.152,
+    "official": "Door County, WI",
+    "miles": 16,
+    "centroid": {
+      "lon": -87.345365,
+      "lat": 44.904102
+    },
+    "status": "ok"
+  },
+  {
+    "id": "harbor-springs",
+    "name": "Harbor Springs & Petoskey",
+    "fips": "26047",
+    "declared": "Emmet County",
+    "scope": "county",
+    "lat": 45.431,
+    "lon": -84.991,
+    "official": "Emmet County, MI",
+    "miles": 4,
+    "centroid": {
+      "lon": -84.908934,
+      "lat": 45.433951
+    },
+    "status": "ok"
+  },
+  {
+    "id": "traverse-city",
+    "name": "Traverse City & Leelanau",
+    "fips": "26055",
+    "declared": "Grand Traverse County",
+    "scope": "county",
+    "lat": 44.763,
+    "lon": -85.62,
+    "official": "Grand Traverse County, MI",
+    "miles": 4,
+    "centroid": {
+      "lon": -85.607171,
+      "lat": 44.710656
+    },
+    "status": "ok"
+  }
+]

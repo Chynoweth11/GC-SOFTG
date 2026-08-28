@@ -191,9 +191,46 @@ var LCDOS_DATA = (function () {
     'frontier':   'Frontier — pre-recognition'
   };
 
+  /* ======================================================================
+   * OBSERVED-DATA OVERRIDE
+   * src/data/observed.js is written by `node tools/ingest` from official
+   * sources. Where it carries a field, it replaces the analyst estimate and
+   * upgrades that field's provenance tier — so Data Confidence Scores rise on
+   * their own as real data arrives. The file is optional: with no ingest run,
+   * the analyst layer stands and the application says so.
+   * ==================================================================== */
+  var OBSERVED_STATUS = { ran: false, applied: 0, markets: 0, manifest: null };
+
+  function applyObserved(OBS) {
+    /* An empty observed set is the same as no ingest: the analyst layer stands
+       and the status stays honest rather than claiming a live data layer. */
+    if (!OBS || !OBS.markets || !Object.keys(OBS.markets).length) return OBSERVED_STATUS;
+    var applied = 0, touched = 0;
+    MARKETS.forEach(function (m) {
+      var o = OBS.markets[m.id];
+      if (!o) return;
+      var any = false;
+      for (var f in o) {
+        if (!Object.prototype.hasOwnProperty.call(o, f)) continue;
+        if (!FIELD_PROV[f]) continue;                 // ignore fields we do not model
+        var rec = o[f];
+        if (rec == null || typeof rec.v !== 'number' || !isFinite(rec.v)) continue;
+        m.p[f] = rec.v;
+        m.prov = m.prov || {};
+        m.prov[f] = { tier: rec.tier, src: rec.src, asOf: rec.asOf, observed: true };
+        applied++; any = true;
+      }
+      if (any) touched++;
+    });
+    OBSERVED_STATUS = { ran: true, applied: applied, markets: touched, manifest: OBS.manifest || null };
+    return OBSERVED_STATUS;
+  }
+
   return {
     SOURCES: SOURCES,
     FIELD_PROV: FIELD_PROV,
+    applyObserved: applyObserved,
+    observedStatus: function () { return OBSERVED_STATUS; },
     ARCHETYPES: ARCHETYPES,
     TIER_LABELS: TIER_LABELS,
     MARKETS: MARKETS,

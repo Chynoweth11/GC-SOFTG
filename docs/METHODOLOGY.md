@@ -222,22 +222,61 @@ the *relative* ordering is far more reliable than any individual figure. That is
 exactly what a screening instrument needs to be. It is not what an underwriting
 instrument needs to be, and the system says so on every market page.
 
-### Ingest roadmap
+### The observed-data layer
 
-The application's **Methodology → Data quality** view lists, field by field, the
-public endpoint that should replace each estimate. In priority order:
+Confidence is not meant to stay where it is. `src/data/observed.js` is a second
+data layer that sits **above** the analyst estimates: where it carries a field,
+that value replaces the estimate and the field's provenance tier is raised to
+whatever the source supports. Nothing else in the model changes — the same
+transforms run on better inputs, and the Data Confidence Score rises on its own.
+
+`node tools/ingest` writes that file. It is built and tested, and it runs against
+six free public sources:
+
+| Source | Fields it carries | Tier it confers |
+| --- | --- | --- |
+| Census Building Permits Survey | `permits`, `permitCagr3` | verified |
+| Census ACS 5-year | `households`, `pop`, `medHhInc`, `secondHomePct`, `units` | verified |
+| BLS QCEW | `constEstab`, `constEmp` | verified |
+| IRS SOI county migration | `netAgiIn`, `hnwiInflow` | verified |
+| FEMA National Risk Index | `climateIdx`, `hazardIdx` | verified |
+| Zillow ZHVI | `medHomeValue`, `apprec5` | reported |
+
+`tools/ingest/map.js` apportions each county series onto the 79 markets. It holds
+an explicit share and a written basis for every one of the 91 county↔market
+relationships, and it distinguishes **levels** (summed across counties) from
+**rates** (population-weighted), because averaging a permit count and averaging a
+growth rate are not the same operation.
+
+Three rules govern the ingest, and they are the point of it:
+
+1. **An unreachable source is reported as unreachable.** No interpolation, no
+   substitution, no carry-forward of a previous run into a field the current run
+   could not retrieve. The manifest records what succeeded, what failed, and when.
+2. **A field is only overridden by a source that actually measures it.** A proxy
+   is not an observation; proxies stay in the analyst layer where their tier is
+   honest.
+3. **The empty state is a real state.** The committed `observed.js` carries no
+   values, and the application says on the Overview and on every market page that
+   the analyst layer is what is standing.
+
+`.github/workflows/refresh-data.yml` runs the ingest weekly, revalidates the
+geography, rebuilds `dist/` and commits only on a real change.
+
+### What the ingest cannot reach
+
+Two blocks of fields have no free national feed, and they are the ones that would
+move confidence the furthest:
 
 1. **MLS / brokerage transaction feeds** (`luxPpsf`, `tx2m`, `tx5m`, `tx10m`,
    `dom`, `cashShare`) — these drive four of the ten categories and are the
    single highest-value replacement in the dataset. Requires per-market data
-   licences; no national free source exists.
+   licences.
 2. **County & municipal planning registers** (`pipelineM`, `entitledLots`,
-   `infraM`) — manual per-market collection; no national feed exists.
-3. **Census BPS / PEP / ACS / BFS, BLS QCEW, IRS SOI, FAA ATADS, FEMA NRI** —
-   all free APIs, all mechanically ingestible, and together they move roughly
-   20 fields from *reported* to *verified*.
-4. **State contractor licence registries + ABC backlog + RSMeans** for
-   `luxGcCount`, `backlog` and `costPsf`.
+   `infraM`) — manual per-market collection.
+
+Below those: state contractor licence registries, ABC backlog and RSMeans for
+`luxGcCount`, `backlog` and `costPsf`.
 
 Rubric fields stay judgement-based by design. What should change is governance:
 two independent scorers per market with a documented reconciliation, which
@@ -313,11 +352,17 @@ constraint, and absorption by relative demand index.
 ## 11. Reproducing everything
 
 ```bash
-node tools/check.js        # model + dataset integrity (must pass before commit)
-node tools/build-geo.js    # regenerate projected geography from data/raw/
-node tools/build-docs.js   # regenerate TOP-10.md and DATA-DICTIONARY.md
-node tools/build.js        # inline everything into dist/
+node tools/check.js           # model + dataset integrity (must pass before commit)
+node tools/validate-geo.js    # every market against the Census FIPS master
+node tools/ingest/selftest.js # the ingest pipeline against wire-format fixtures
+
+node tools/ingest             # refresh src/data/observed.js from official sources
+node tools/build-geo.js       # regenerate projected geography from data/raw/
+node tools/build-fonts.js     # regenerate src/css/fonts.css as inlined data URIs
+node tools/build-docs.js      # regenerate TOP-10.md and DATA-DICTIONARY.md
+node tools/build.js           # inline everything into dist/
 ```
 
-The application has no runtime dependencies. It loads plain scripts in
-dependency order and runs from the filesystem with zero external requests.
+The application has no runtime dependencies and makes **no network requests at
+all** — the typefaces are inlined as `woff2` data URIs, so it loads plain scripts
+in dependency order and runs from the filesystem, offline, unchanged.

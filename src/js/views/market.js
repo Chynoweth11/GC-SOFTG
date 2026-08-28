@@ -194,7 +194,7 @@ var V_MARKET = (function (ST, U, CH) {
         return '<div style="margin-bottom:9px"><div class="flex between center" style="margin-bottom:3px">' +
           '<span class="prov ' + t + '" style="margin:0">' + U.esc(tiers[t].label) + '</span>' +
           '<span class="mono dim">' + n + ' fields · ' + U.pct(n / c.fieldCount * 100, 0) + '</span></div>' +
-          U.bar(n / c.fieldCount * 100, t === 'verified' ? '#3fd9ad' : t === 'reported' ? '#5aa9f5' : t === 'modelled' ? '#a884f3' : t === 'estimated' ? '#f2b544' : '#6c7d94') +
+          U.bar(n / c.fieldCount * 100, t === 'verified' ? U.cssvar('--s1', '#3f9e8c') : t === 'reported' ? U.cssvar('--s0', '#4a6fa5') : t === 'modelled' ? U.cssvar('--accent', '#1c5fd4') : t === 'estimated' ? U.cssvar('--s3', '#e8b13c') : U.cssvar('--ink-3', '#767c87')) +
           '<p class="dim2" style="font-size:10.5px;margin:4px 0 0;line-height:1.45">' + U.esc(tiers[t].desc) + '</p></div>';
       }).join('') + '</div></div></div>';
   }
@@ -319,7 +319,7 @@ var V_MARKET = (function (ST, U, CH) {
         '</div>' +
         (sigs.length ? '<div class="gridcards g3 mb16">' + sigs.map(function (s) {
           return '<div class="alert sev' + s.sev + '"><h5>' +
-            (s.kind === 'risk' ? '<span style="color:var(--red)">▲</span>' : '<span style="color:var(--teal)">●</span>') +
+            (s.kind === 'risk' ? '<span style="color:var(--neg)">▲</span>' : '<span style="color:var(--accent)">●</span>') +
             U.esc(s.label) + '</h5><p>' + U.esc(s.why) + '</p></div>';
         }).join('') + '</div>' : '') +
         narrative(r);
@@ -373,7 +373,7 @@ var V_MARKET = (function (ST, U, CH) {
       '<span class="pill" style="color:' + U.confBand(r.confidence).color + '">Confidence ' + r.confidence + ' · ' + U.esc(U.confBand(r.confidence).label) + '</span>' +
       '</div>' +
       '<p class="lede">' + U.esc(m.blurb) + '</p>' +
-      '<div class="flex gap6 mb16 printhide" style="flex-wrap:wrap;border-bottom:1px solid var(--line-2);padding-bottom:10px">' +
+      '<div class="flex gap6 mb16 printhide" style="flex-wrap:wrap;border-bottom:1px solid var(--hairline-2);padding-bottom:10px">' +
       tabs.map(function (t) {
         return '<button class="chip' + (tab === t.id ? ' on' : '') + '" data-mtab="' + t.id + '">' + U.esc(t.l) + '</button>';
       }).join('') + '</div>' +

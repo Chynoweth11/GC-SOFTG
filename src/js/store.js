@@ -22,8 +22,6 @@ var STORE = (function (DATA, MODEL, SC, PIPE, U) {
     showLabels: true,
     labelTop: 22,
 
-    /* filters */
-    filters: { regions: [], archetypes: [], tiers: [], minScore: 0, minConf: 0, q: '' },
 
     /* scenario */
     scenario: {},
@@ -208,20 +206,18 @@ var STORE = (function (DATA, MODEL, SC, PIPE, U) {
   }
 
   /* --------------------------------------------------------------- filters */
-  function passes(r) {
-    var f = S.filters, m = r.m;
-    if (f.regions.length && f.regions.indexOf(m.region) < 0) return false;
-    if (f.archetypes.length && f.archetypes.indexOf(m.archetype) < 0) return false;
-    if (f.tiers.length && f.tiers.indexOf(m.tier) < 0) return false;
-    if (r.lcdos < f.minScore) return false;
-    if (r.confidence < f.minConf) return false;
-    if (f.q) {
-      var q = f.q.toLowerCase();
-      if ((m.name + ' ' + m.state + ' ' + m.county + ' ' + m.region + ' ' + m.archetype).toLowerCase().indexOf(q) < 0) return false;
-    }
-    return true;
+  var filtersReady = false;
+  function ensureFilters() {
+    if (filtersReady || typeof FILTERS === 'undefined') return;
+    FILTERS.init(DER.ranked, API);
+    filtersReady = true;
   }
-  function filtered() { return DER.ranked.filter(passes); }
+  function passes(r) {
+    if (typeof FILTERS === 'undefined') return true;
+    ensureFilters();
+    return FILTERS.match(r, API);
+  }
+  function filtered() { ensureFilters(); return DER.ranked.filter(passes); }
 
   /* ------------------------------------------------------------- accessors */
   function get(id) { return DER.byId[id]; }
@@ -251,19 +247,25 @@ var STORE = (function (DATA, MODEL, SC, PIPE, U) {
     emit('compare');
   }
 
-  recompute();
-
-  return {
+  var API = {
     S: S, DER: DER, RULES: RULES,
     DATA: DATA, MODEL: MODEL, PIPE: PIPE,
     ev: function (id) { return EV[id]; },
     conf: function (id) { return CONF[id]; },
     hist: hist, projects: projects,
     get: get, market: market,
+    observed: function () { return DATA.observedStatus(); },
     filtered: filtered, passes: passes,
     pctlOf: pctlOf,
     recompute: recompute, set: set, sub: sub, emit: emit,
     setScenario: setScenario, resetScenario: resetScenario,
     selectMarket: selectMarket, toggleCompare: toggleCompare
   };
+
+  /* Merge any observed data before the first evaluation. */
+  if (typeof LCDOS_OBSERVED !== 'undefined') DATA.applyObserved(LCDOS_OBSERVED);
+
+  recompute();
+
+  return API;
 })(LCDOS_DATA, LCDOS_MODEL, LCDOS_SCORING, LCDOS_PIPELINE, U);

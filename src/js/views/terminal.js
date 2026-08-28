@@ -20,29 +20,15 @@ var V_TERMINAL = (function (ST, U, CH) {
     }).join('');
   }
 
-  function filterRail() {
-    var D = ST.DATA;
-    var regions = {}, archs = {}, tiers = {};
-    D.MARKETS.forEach(function (m) { regions[m.region] = 1; archs[m.archetype] = 1; tiers[m.tier] = 1; });
-    var f = ST.S.filters;
+  var railTab = 'layers';
 
-    function chipset(obj, key, labelFn) {
-      return Object.keys(obj).sort().map(function (k) {
-        return '<button class="chip' + (f[key].indexOf(k) >= 0 ? ' on' : '') + '" data-f="' + key + '" data-v="' + U.esc(k) + '">' +
-          U.esc(labelFn ? labelFn(k) : k) + '</button>';
-      }).join('');
-    }
-
-    return '<div class="railsec"><h4>Region</h4><div class="chips">' + chipset(regions, 'regions') + '</div></div>' +
-      '<div class="railsec"><h4>Market type</h4><div class="chips">' +
-      chipset(archs, 'archetypes', function (k) { return D.ARCHETYPES[k] ? D.ARCHETYPES[k].label : k; }) + '</div></div>' +
-      '<div class="railsec"><h4>Maturity tier</h4><div class="chips">' + chipset(tiers, 'tiers') + '</div></div>' +
-      '<div class="railsec"><h4>Thresholds</h4>' +
-      '<div class="ctl"><label>Minimum LCDOS <b>' + f.minScore + '</b></label>' +
-      '<input type="range" min="0" max="80" step="1" value="' + f.minScore + '" data-th="minScore"></div>' +
-      '<div class="ctl"><label>Minimum confidence <b>' + f.minConf + '</b></label>' +
-      '<input type="range" min="0" max="80" step="1" value="' + f.minConf + '" data-th="minConf"></div>' +
-      '<button class="btn wide" data-act="clearfilters">Clear all filters</button></div>';
+  function railHead() {
+    return '<div class="railsec fsticky" style="padding-bottom:12px">' +
+      '<div class="modules fill">' +
+      '<button class="mod' + (railTab === 'layers' ? ' on' : '') + '" data-railtab="layers">Layers</button>' +
+      '<button class="mod' + (railTab === 'filters' ? ' on' : '') + '" data-railtab="filters">Filters' +
+      (FILTERS.activeCount() ? ' <span class="fcount">' + FILTERS.activeCount() + '</span>' : '') + '</button>' +
+      '</div></div>';
   }
 
   /* ------------------------------------------------------------ inspector */
@@ -94,7 +80,7 @@ var V_TERMINAL = (function (ST, U, CH) {
       '</div>' +
 
       '<div class="railsec"><h4>Category scores</h4>' +
-      CH.hbars(cats, { width: 366, labelW: 168, valW: 40, rowH: 21 }) + '</div>' +
+      CH.hbars(cats, { width: 348, labelW: 152, valW: 46, rowH: 22 }) + '</div>' +
 
       '<div class="railsec"><h4>Operating picture</h4>' +
       '<div class="stat"><span class="sl">Modelled $2M+ starts</span><span class="sv">' + U.n0(e.derived.luxStarts) + '/yr</span></div>' +
@@ -110,7 +96,7 @@ var V_TERMINAL = (function (ST, U, CH) {
       (sigs.length ? '<div class="railsec"><h4>Signals <span class="dim2">' + sigs.length + '</span></h4>' +
         sigs.slice(0, 7).map(function (s) {
           return '<div class="alert sev' + s.sev + '" style="margin-bottom:6px"><h5>' +
-            (s.kind === 'risk' ? '<span style="color:var(--red)">▲</span>' : '<span style="color:var(--teal)">●</span>') +
+            (s.kind === 'risk' ? '<span style="color:var(--neg)">▲</span>' : '<span style="color:var(--accent)">●</span>') +
             U.esc(s.label) + '</h5><p>' + U.esc(s.why) + '</p></div>';
         }).join('') + '</div>' : '') +
 
@@ -126,15 +112,23 @@ var V_TERMINAL = (function (ST, U, CH) {
   }
 
   function encodingHtml() {
+    var lo = U.cssvar('--s0', '#4a6fa5'), hi = U.cssvar('--s4', '#df7a33'),
+        up = U.cssvar('--s2', '#7fbf5a'), dn = U.cssvar('--s5', '#b8442a'),
+        ink = U.cssvar('--ink-3', '#767c87');
+    function dot(a) { return '<svg width="46" height="18">' + a + '</svg>'; }
     return '<table style="width:100%;font-size:11px;color:var(--ink-3)">' +
-      '<tr><td style="padding:3px 0;width:52px"><svg width="46" height="18"><circle cx="10" cy="9" r="3.5" fill="#2fae91"/><circle cx="32" cy="9" r="8" fill="#2fae91"/></svg></td>' +
-      '<td>Size — annual $2M+ construction volume</td></tr>' +
-      '<tr><td style="padding:3px 0"><svg width="46" height="18"><circle cx="12" cy="9" r="6" fill="#2d4257"/><circle cx="34" cy="9" r="6" fill="#ff7a45"/></svg></td>' +
-      '<td>Fill — active layer value</td></tr>' +
-      '<tr><td style="padding:3px 0"><svg width="46" height="18"><circle cx="12" cy="9" r="6" fill="none" stroke="#f2545b" stroke-width="2"/><circle cx="34" cy="9" r="6" fill="none" stroke="#3fd9ad" stroke-width="2"/></svg></td>' +
-      '<td>Ring — permit growth (red falling, teal rising)</td></tr>' +
-      '<tr><td style="padding:3px 0"><svg width="46" height="18"><circle cx="22" cy="9" r="4" fill="#3fd9ad"/><circle cx="22" cy="9" r="8" fill="none" stroke="#3fd9ad" opacity=".4"/></svg></td>' +
-      '<td>Pulse — momentum index above 66</td></tr></table>';
+      '<tr><td style="padding:3px 0;width:52px">' +
+      dot('<circle cx="10" cy="9" r="3.5" fill="' + ink + '"/><circle cx="32" cy="9" r="8" fill="' + ink + '"/>') +
+      '</td><td>Size — annual $2M+ construction volume</td></tr>' +
+      '<tr><td style="padding:3px 0">' +
+      dot('<circle cx="12" cy="9" r="6" fill="' + lo + '"/><circle cx="34" cy="9" r="6" fill="' + hi + '"/>') +
+      '</td><td>Fill — active layer value, low to high</td></tr>' +
+      '<tr><td style="padding:3px 0">' +
+      dot('<circle cx="12" cy="9" r="6" fill="none" stroke="' + dn + '" stroke-width="2"/><circle cx="34" cy="9" r="6" fill="none" stroke="' + up + '" stroke-width="2"/>') +
+      '</td><td>Ring — permit growth, falling to rising</td></tr>' +
+      '<tr><td style="padding:3px 0">' +
+      dot('<circle cx="22" cy="9" r="4" fill="' + hi + '"/><circle cx="22" cy="9" r="8" fill="none" stroke="' + hi + '" opacity=".4"/>') +
+      '</td><td>Pulse — momentum index above 66</td></tr></table>';
   }
 
   function topOfBook() {
@@ -160,18 +154,22 @@ var V_TERMINAL = (function (ST, U, CH) {
     var vis = ST.filtered();
     return '<div class="legendrow" style="margin-bottom:5px"><span class="tiny" style="letter-spacing:.1em">' + U.esc(layer.label) + '</span></div>' +
       '<div class="legendrow"><span class="mono dim2" style="font-size:9px">LOW</span><span class="rampbar"></span><span class="mono dim2" style="font-size:9px">HIGH</span></div>' +
-      '<div class="legendrow mt6"><span class="mono dim2" style="font-size:9.5px">' + vis.length + ' of ' + ST.DER.ranked.length + ' markets shown</span></div>';
+      '<div class="legendrow mt6"><span class="mono dim2" style="font-size:10px">' + vis.length + ' of ' + ST.DER.ranked.length + ' markets' +
+      (FILTERS.activeCount() ? ' · ' + FILTERS.activeCount() + ' filters' : '') + '</span></div>';
   }
 
   function render(root) {
     body = root;
     body.innerHTML =
-      '<div class="rail" id="mapRail">' +
-      '<div class="railsec"><h4>Map layer</h4>' +
-      '<div class="toggle' + (ST.S.showLabels ? ' on' : '') + '" data-act="tglabels"><span class="sw"></span>Market labels</div>' +
-      '<div class="ctl mt6"><label>Labels shown <b>' + ST.S.labelTop + '</b></label>' +
-      '<input type="range" min="0" max="79" step="1" value="' + ST.S.labelTop + '" data-th="labelTop"></div></div>' +
-      layerRail() + filterRail() +
+      '<div class="rail" id="mapRail">' + railHead() +
+      (railTab === 'layers'
+        ? ('<div class="railsec"><h4>Display</h4>' +
+           '<div class="toggle' + (ST.S.showLabels ? ' on' : '') + '" data-act="tglabels"><span class="sw"></span>Market labels</div>' +
+           '<div class="toggle' + (ST.S.showCounties ? ' on' : '') + '" data-act="tgcounties"><span class="sw"></span>County boundaries</div>' +
+           '<div class="ctl mt10"><label>Labels shown <b>' + ST.S.labelTop + '</b></label>' +
+           '<input type="range" min="0" max="79" step="1" value="' + ST.S.labelTop + '" data-th="labelTop"></div></div>' +
+           layerRail())
+        : FILTERS.render()) +
       '</div>' +
       '<div class="stage"><div class="mapwrap" id="mapWrap"></div>' +
       '<div class="mapctl tl"><div class="breadcrumb" id="crumb">' + breadcrumb() + '</div></div>' +
@@ -204,16 +202,26 @@ var V_TERMINAL = (function (ST, U, CH) {
   }
 
   function wire() {
+    U.on(body, 'click', '[data-railtab]', function (e, t) {
+      railTab = t.dataset.railtab; render(body);
+    });
+    if (railTab === 'filters') {
+      var rail = document.getElementById('mapRail');
+      if (rail) FILTERS.wire(rail, function () {
+        redrawMap(); refreshInspector();
+        var b = rail.querySelector('[data-railtab="filters"] .fcount');
+        var n = FILTERS.activeCount();
+        if (b) { if (n) b.textContent = n; else b.remove(); }
+        else if (n) {
+          var btn = rail.querySelector('[data-railtab="filters"]');
+          if (btn) btn.insertAdjacentHTML('beforeend', ' <span class="fcount">' + n + '</span>');
+        }
+      });
+    }
     U.on(body, 'click', '[data-layer]', function (e, t) {
       ST.S.layer = t.dataset.layer;
       U.$$('[data-layer]', body).forEach(function (b) { b.classList.toggle('on', b.dataset.layer === ST.S.layer); });
       redrawMap();
-    });
-    U.on(body, 'click', '[data-f][data-v]', function (e, t) {
-      var arr = ST.S.filters[t.dataset.f], v = t.dataset.v, i = arr.indexOf(v);
-      if (i >= 0) arr.splice(i, 1); else arr.push(v);
-      t.classList.toggle('on');
-      redrawMap(); refreshInspector();
     });
     U.on(body, 'click', '[data-act]', function (e, t) {
       var a = t.dataset.act, id = t.dataset.id;
@@ -228,16 +236,13 @@ var V_TERMINAL = (function (ST, U, CH) {
       else if (a === 'ic') { ST.selectMarket(id); ST.set({ view: 'ic' }, 'view'); }
       else if (a === 'cmp') { ST.toggleCompare(id); refreshInspector(); }
       else if (a === 'tglabels') { ST.S.showLabels = !ST.S.showLabels; t.classList.toggle('on'); redrawMap(); }
-      else if (a === 'clearfilters') {
-        ST.S.filters = { regions: [], archetypes: [], tiers: [], minScore: 0, minConf: 0, q: '' };
-        render(body);
-      }
+      else if (a === 'tgcounties') { ST.S.showCounties = !ST.S.showCounties; t.classList.toggle('on'); redrawMap(); }
     });
     U.on(body, 'input', '[data-th]', function (e, t) {
-      var k = t.dataset.th, v = +t.value;
-      if (k === 'labelTop') ST.S.labelTop = v; else ST.S.filters[k] = v;
+      if (t.dataset.th !== 'labelTop') return;
+      ST.S.labelTop = +t.value;
       var lab = t.previousElementSibling && t.previousElementSibling.querySelector('b');
-      if (lab) lab.textContent = v;
+      if (lab) lab.textContent = t.value;
       redrawMap();
     });
   }

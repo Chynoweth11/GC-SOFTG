@@ -170,15 +170,15 @@ var V_RANKINGS = (function (ST, U, CH) {
     ov.className = 'overlay';
     ov.innerHTML =
       '<div class="palette" style="width:min(880px,94vw)">' +
-      '<div class="flex between center" style="padding:12px 15px;border-bottom:1px solid var(--line-2);background:var(--panel-2)">' +
+      '<div class="flex between center" style="padding:12px 15px;border-bottom:1px solid var(--hairline-2);background:var(--surface-2)">' +
       '<div><b style="font-size:13.5px">Export rankings</b>' +
       '<div class="dim" style="font-size:11px">' + rows + ' markets · 28 columns · CSV, current sort and filters</div></div>' +
       '<div class="flex gap6"><button class="btn on" data-x="copy">Copy CSV</button>' +
       '<button class="btn" data-x="close">Close</button></div></div>' +
       '<textarea readonly spellcheck="false" style="width:100%;height:46vh;border:0;border-radius:0;resize:none;' +
-      'background:var(--bg-2);color:var(--ink-2);font-family:var(--mono);font-size:10.5px;line-height:1.5;padding:12px 15px">' +
+      'background:var(--surface-3);color:var(--ink-2);font-family:var(--mono);font-size:10.5px;line-height:1.5;padding:12px 15px">' +
       U.esc(text) + '</textarea>' +
-      '<div class="dim2" style="padding:9px 15px;font-size:10.5px;border-top:1px solid var(--line)">' +
+      '<div class="dim2" style="padding:9px 15px;font-size:10.5px;border-top:1px solid var(--hairline)">' +
       'Every column is documented in docs/DATA-DICTIONARY.md. Scores recompute under the active scenario, so an export taken with a scenario loaded reflects that scenario.</div>' +
       '</div>';
     document.body.appendChild(ov);

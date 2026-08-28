@@ -73,8 +73,20 @@ var V_SCENARIO = (function (ST, U, CH, SC) {
         base: b
       };
     });
-    var up = rows.slice().sort(function (a, b) { return b.dScore - a.dScore; }).slice(0, 12);
-    var down = rows.slice().sort(function (a, b) { return a.dScore - b.dScore; }).slice(0, 12);
+    /* At baseline every delta is zero, and two identical tables of zeros say
+       nothing. Ask for a lever instead. */
+    var moved = rows.some(function (x) { return Math.abs(x.dScore) > 0.05 || x.dRank !== 0; });
+    if (!moved) {
+      return '<div class="panel"><header><h3>Movers</h3><span class="pill">Baseline</span></header>' +
+        '<div class="pad"><p class="dim" style="font-size:12.5px;margin:0;line-height:1.65">' +
+        'Nothing has moved because no lever has moved. Pull an assumption on the left, or load one of ' +
+        'the presets, and this panel ranks every market by how far its score and rank travel against ' +
+        'the baseline.</p></div></div>';
+    }
+    var up = rows.slice().sort(function (a, b) { return b.dScore - a.dScore; })
+      .filter(function (x) { return x.dScore > 0.05; }).slice(0, 12);
+    var down = rows.slice().sort(function (a, b) { return a.dScore - b.dScore; })
+      .filter(function (x) { return x.dScore < -0.05; }).slice(0, 12);
 
     function tbl(list, title) {
       return '<div class="panel"><header><h3>' + title + '</h3></header><div class="scrollx">' +
@@ -90,7 +102,9 @@ var V_SCENARIO = (function (ST, U, CH, SC) {
             '<td>' + U.deltaHtml(x.dDev, '') + '</td></tr>';
         }).join('') + '</tbody></table></div></div>';
     }
-    return '<div class="gridcards g2">' + tbl(up, 'Largest gains') + tbl(down, 'Largest losses') + '</div>';
+    return '<div class="gridcards g2">' +
+      (up.length ? tbl(up, 'Largest gains') : '') +
+      (down.length ? tbl(down, 'Largest losses') : '') + '</div>';
   }
 
   function idahoWatch() {
@@ -137,7 +151,7 @@ var V_SCENARIO = (function (ST, U, CH, SC) {
       '<div class="panel mt16"><header><h3>How the levers work</h3></header><div class="pad">' +
       '<div class="gridcards g2">' +
       SC.SCENARIO_LEVERS.map(function (lv) {
-        return '<div style="padding:7px 0;border-bottom:1px solid var(--line)"><b style="font-size:12px">' + U.esc(lv.label) + '</b>' +
+        return '<div style="padding:7px 0;border-bottom:1px solid var(--hairline)"><b style="font-size:12px">' + U.esc(lv.label) + '</b>' +
           '<p class="dim" style="font-size:11.5px;margin:3px 0 0;line-height:1.5">' + U.esc(lv.desc) + '</p></div>';
       }).join('') + '</div></div></div>' +
       '</div></div>';

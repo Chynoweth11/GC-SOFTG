@@ -54,7 +54,7 @@ var V_METHOD = (function (ST, U, CH) {
       '<h2>Weighted categories</h2>' +
       '<div class="panel mb16"><div class="pad">' +
       CH.hbars(ST.MODEL.CATEGORIES.map(function (c) {
-        return { label: c.key + ' · ' + c.label, v: c.weight, display: c.weight + '%', color: '#3fd9ad' };
+        return { label: c.key + ' · ' + c.label, v: c.weight, display: c.weight + '%', color: U.cssvar('--accent', '#1c5fd4') };
       }), { width: 700, labelW: 300, valW: 50, rowH: 24, max: 20 }) + '</div></div>' +
 
       ST.MODEL.CATEGORIES.map(function (c) {
@@ -67,7 +67,7 @@ var V_METHOD = (function (ST, U, CH) {
             return '<tr style="cursor:default"><td class="l"><b style="font-weight:520;font-size:12.5px">' + U.esc(i.label) + '</b>' +
               '<div class="dim2" style="font-size:11.5px;line-height:1.5;margin-top:3px">' + U.esc(i.why) + '</div></td>' +
               '<td>' + i.w + '%</td>' +
-              '<td class="l"><code style="font-family:var(--mono);font-size:10.5px;color:var(--violet);word-break:break-word">' +
+              '<td class="l"><code style="font-family:var(--mono);font-size:10.5px;color:var(--accent);word-break:break-word">' +
               U.esc(src) + '</code></td></tr>';
           }).join('') + '</tbody></table></div></div>';
       }).join('');
@@ -85,8 +85,8 @@ var V_METHOD = (function (ST, U, CH) {
       '<div class="panel mb16"><div class="pad">' +
       fns.map(function (k) {
         if (typeof D[k] !== 'function') return '';
-        return '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)">' +
-          '<b class="mono" style="color:var(--teal);font-size:12px">' + U.esc(k) + '</b>' +
+        return '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--hairline)">' +
+          '<b class="mono" style="color:var(--accent);font-size:12px">' + U.esc(k) + '</b>' +
           '<pre style="margin:5px 0 0;font-family:var(--mono);font-size:11px;color:var(--ink-2);white-space:pre-wrap;line-height:1.55">' +
           U.esc(D[k].toString()) + '</pre></div>';
       }).join('') + '</div></div>' +
@@ -185,7 +185,7 @@ var V_METHOD = (function (ST, U, CH) {
         return '<div style="margin-bottom:11px"><div class="flex between center" style="margin-bottom:3px">' +
           '<span class="prov ' + t + '" style="margin:0">' + U.esc(tt.label) + ' · weight ' + tt.w + '</span>' +
           '<span class="mono dim">' + U.n0(n) + ' fields · ' + U.pct(n / allFields * 100, 0) + '</span></div>' +
-          U.bar(n / allFields * 100, t === 'verified' ? '#3fd9ad' : t === 'reported' ? '#5aa9f5' : t === 'modelled' ? '#a884f3' : t === 'estimated' ? '#f2b544' : '#6c7d94') +
+          U.bar(n / allFields * 100, U.cssvar(t === 'verified' ? '--s1' : t === 'reported' ? '--s2' : t === 'modelled' ? '--s3' : t === 'estimated' ? '--s4' : '--ink-3', '#767c87')) +
           '<p class="dim2" style="font-size:11px;margin:4px 0 0;line-height:1.45">' + U.esc(tt.desc) + '</p></div>';
       }).join('') + '</div></div></div>' +
 
@@ -207,7 +207,7 @@ var V_METHOD = (function (ST, U, CH) {
       '<th class="l">Field(s)</th><th class="l">Current tier</th><th class="l">Target</th><th class="l">Source</th><th class="l">How</th>' +
       '</tr></thead><tbody>' +
       INGEST.map(function (x) {
-        return '<tr style="cursor:default"><td class="l mono" style="font-size:11px;color:var(--teal)">' + U.esc(x.field) + '</td>' +
+        return '<tr style="cursor:default"><td class="l mono" style="font-size:11px;color:var(--accent)">' + U.esc(x.field) + '</td>' +
           '<td class="l"><span class="prov ' + x.now.split(' ')[0] + '" style="margin:0">' + U.esc(x.now) + '</span></td>' +
           '<td class="l"><span class="prov ' + x.target + '" style="margin:0">' + U.esc(x.target) + '</span></td>' +
           '<td class="l" style="font-size:12px">' + U.esc(x.src) + '</td>' +
@@ -231,7 +231,7 @@ var V_METHOD = (function (ST, U, CH) {
       Object.keys(byKind).map(function (kind) {
         return '<div class="panel" style="margin-bottom:10px"><header><h3>' + U.esc(kind) + '</h3></header>' +
           '<table class="grid"><tbody>' + byKind[kind].map(function (x) {
-            return '<tr style="cursor:default"><td class="l mono" style="width:170px;color:var(--teal);font-size:11px">' + U.esc(x[0]) + '</td>' +
+            return '<tr style="cursor:default"><td class="l mono" style="width:170px;color:var(--accent);font-size:11px">' + U.esc(x[0]) + '</td>' +
               '<td class="l">' + U.esc(x[1].name) + (x[1].url ? ' · <a href="' + U.esc(x[1].url) + '" target="_blank" rel="noopener">link</a>' : '') + '</td></tr>';
           }).join('') + '</tbody></table></div>';
       }).join('') +
@@ -287,7 +287,7 @@ var V_METHOD = (function (ST, U, CH) {
       ST.MODEL.CATEGORIES.reduce(function (a, c) { return a + c.indicators.length; }, 0) +
       ' indicators, computed from 70 primitive quantities per market. This module prints the entire model — every weight, every formula, ' +
       'every source, and an honest account of what the data can and cannot support.</p>' +
-      '<div class="flex gap6 mb16" style="flex-wrap:wrap;border-bottom:1px solid var(--line-2);padding-bottom:10px">' +
+      '<div class="flex gap6 mb16" style="flex-wrap:wrap;border-bottom:1px solid var(--hairline-2);padding-bottom:10px">' +
       TABS.map(function (t) {
         return '<button class="chip' + (tab === t.id ? ' on' : '') + '" data-mt="' + t.id + '">' + U.esc(t.l) + '</button>';
       }).join('') + '</div>' + content + '</div></div></div>';

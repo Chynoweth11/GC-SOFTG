@@ -40,27 +40,54 @@ node tools/build.js && open dist/index.html
 ```
 
 No build step is required for development. No package installs, no bundler, no
-framework — the application loads plain scripts in dependency order. The only
-external request is the IBM Plex web font; the CSS declares real fallback stacks,
-so the page renders correctly with no network at all.
+framework — the application loads plain scripts in dependency order. There are
+**no network requests at all**: the two typefaces (Archivo and IBM Plex Mono) are
+inlined as `woff2` data URIs by `tools/build-fonts.js`, and every byte the page
+needs ships with it. It runs offline, from a file:// URL, or from any static
+host without change.
 
-## The ten modules
+## The seven modules
 
 | Module | What it does |
 | --- | --- |
-| **Terminal** | Full-screen U.S. map. Nodes encode four dimensions at once: size = annual $2M+ construction volume, fill = the active layer, ring = permit growth, pulse = momentum above 66. Zoom from nation → state → county with real Census boundaries. 37 switchable data layers. |
+| **Overview** | The answer surface. The three questions above, each with its leading market and runners-up; the four headline aggregates; the Top 10; the live signal feed; and the data-status panel that states, in plain terms, what the numbers are currently made of. |
+| **Map** | Full-screen U.S. map. Nodes encode four dimensions at once: size = annual $2M+ construction volume, fill = the active layer, ring = permit growth, pulse = momentum above 66. Zoom from nation → state → county with real Census boundaries. 37 switchable data layers, and the full filter panel in the same rail. |
 | **Rankings** | The full league table with every score, sortable on any column, with one-click presets for each of the three questions above. CSV export. |
-| **Matrix** | The four-quadrant Opportunity Matrix (current luxury maturity × future growth) and the Construction Supply-vs-Demand plot that raises Entry Opportunity Alerts. |
-| **Radar** | The Emerging Market Radar. 21 signal rules, each a stated condition on the underlying data, producing a live alert feed of ~340 signals across the universe. |
-| **Compare** | 2–10 markets side by side: radar profile, score trajectory, a scored heatmap and 35 rows of underlying data. |
+| **Analysis** | Three plots under one roof. **Opportunity matrix** — current luxury maturity × future growth. **Supply vs demand** — where luxury construction demand exceeds the contractors serving it, raising Entry Opportunity Alerts. **Emerging radar** — 21 signal rules, each a stated condition on the underlying data, producing a live feed of ~340 signals. |
+| **Compare** | 2–10 markets side by side: radar profile, score trajectory, a scored heatmap and 35 rows of underlying data. Six quick-start sets for the comparisons worth running first. |
+| **Simulate** | **Expansion** — ranks all 79 markets for a specific company profile (capital, headcount, project size, work mix, revenue target) and names the binding constraint. **Developer** — a full annual-cash-flow pro-forma with IRR, equity multiple, sensitivity grid, and a cross-market run of the identical project in every market. **Scenario** — eleven assumption levers feeding the primitives, not the scores; move one and the whole model re-solves and re-ranks, with before/after deltas. |
+| **Method** | The entire model printed: every weight, every formula's source text, every source, the confidence distribution, and the field-by-field ingest roadmap. |
+
+Two further surfaces open contextually from any of the seven, and are routable
+but deliberately not in the switcher:
+
+| Surface | What it does |
+| --- | --- |
 | **Market** | The full intelligence profile: briefing, score build-up, all 70 indicators with formulas, underlying data with provenance tags, development pipeline, history and outlook, data quality. |
-| **Simulators** | **Expansion** — ranks all 79 markets for a specific company profile (capital, headcount, project size, work mix, revenue target) and names the binding constraint. **Developer** — a full annual-cash-flow pro-forma with IRR, equity multiple, sensitivity grid, and a cross-market run of the identical project in every market. |
-| **Scenario** | Eleven assumption levers feeding the primitives, not the scores. Move one and the whole model re-solves and re-ranks, with before/after deltas. |
-| **IC Mode** | A presentation-quality investment thesis generated live from the model: why this market, why now, why construction, why luxury, why development, why us, what could go wrong, what the upside is. Print/PDF ready. |
-| **Methodology** | The entire model printed: every weight, every formula's source text, every source, the confidence distribution, and the field-by-field ingest roadmap. |
+| **Investment thesis** | A presentation-quality IC memo generated live from the model: why this market, why now, why construction, why luxury, why development, why us, what could go wrong, what the upside is. Print/PDF ready. |
 
 `⌘K` / `Ctrl+K` opens a command palette over markets, modules and map layers.
-Keys `1`–`9` jump between modules.
+Keys `1`–`7` jump between modules. The theme control in the top bar cycles
+system → light → dark and remembers the choice.
+
+## Filtering
+
+One filter engine (`src/js/filters.js`) drives the map, the league table, the
+analysis plots and the comparison picker, so a filter set carries across the
+whole application. It exposes **40 dimensions in six groups**:
+
+| Group | Dimensions |
+| --- | --- |
+| Geography | region, state, market type, maturity tier |
+| Scores | LCDOS, GC entry, developer, opportunity gap, momentum, current luxury, 10-year, 20-year, long-run risk, data confidence |
+| Construction & competition | $2M+ starts/yr, established luxury GCs, starts per incumbent, backlog, trade availability, build cost $/sf, difficulty of entry |
+| Land & development | land availability, spec margin, entitlement months, land % of value, water headroom, housing shortage |
+| Market & wealth | millionaire density and growth, net AGI inflow, luxury $/sf, appreciation, second-home share, population growth, announced pipeline |
+| Flags & signals | entry-opportunity alert, emerging-luxury flag, momentum breakout, land-acquisition environment, and any of the 21 signal rules |
+
+Discrete dimensions get **All / None** per item, every group gets its own reset,
+and one **Reset all** clears the lot. Selecting every value in a set reads as no
+constraint, which is what it is.
 
 ## How the scoring works
 
@@ -97,6 +124,35 @@ individual figure. It is not what an underwriting instrument needs.
 bands and the field-by-field roadmap for replacing each estimate with a public
 endpoint — Census BPS, IRS SOI, BLS QCEW, FAA ATADS, FEMA NRI and the rest.
 
+### How that improves
+
+`node tools/ingest` replaces analyst estimates with retrieved values, field by
+field, and raises each field's provenance tier as it goes — so confidence scores
+rise on their own as real data arrives. It pulls:
+
+| Source | What it carries |
+| --- | --- |
+| Census Building Permits Survey | permit counts and permit growth |
+| Census ACS 5-year | households, population, income, second-home share, housing stock |
+| BLS QCEW | construction establishments and employment — the contractor base |
+| IRS SOI county migration | net AGI inflow and high-AGI household movement |
+| FEMA National Risk Index | climate and hazard exposure |
+| Zillow ZHVI | home-value levels and appreciation |
+
+Each county series is apportioned onto the 79 markets by `tools/ingest/map.js`,
+which carries an explicit share and a written basis for every one of the 91
+county↔market relationships, and which aggregates *levels* by sum and *rates* by
+population weight rather than treating them alike.
+
+**A source that cannot be reached is reported as unreachable.** Nothing is
+substituted, interpolated or invented to fill a gap; the manifest records what
+was retrieved, when, and what failed, and the Overview prints it. The committed
+`src/data/observed.js` is the empty state — no ingest has been run against live
+sources in this build, so the analyst layer stands and the application says so.
+
+`.github/workflows/refresh-data.yml` runs the ingest weekly, revalidates the
+geography, rebuilds `dist/`, and commits only when something actually changed.
+
 Two further things worth stating plainly:
 
 - **The score history is a reconstruction, not a record.** The dataset holds one
@@ -118,32 +174,52 @@ src/js/charts.js            dependency-free SVG charts (radar, scatter, lines, h
 src/js/scoring.js           model evaluation, scenario engine, history, confidence
 src/js/store.js             state, derived rankings, 21 signal rules
 src/js/map.js               interactive map, 37 layers, drill-down
-src/js/views/*.js           the ten modules
+src/js/filters.js           the shared filter engine — 40 dimensions, 6 groups
+src/js/views/*.js           the seven modules and two contextual surfaces
 src/data/model.js           THE MODEL — categories, indicators, weights, formulas
 src/data/markets.js         provenance framework + source registry
 src/data/markets-*.js       the 79-market dataset
 src/data/pipeline.js        27 sourced development projects
 src/data/profiles*.js       13 institutional deep dives (~20,000 words)
+src/data/observed.js        GENERATED by tools/ingest — the observed-data layer
 src/data/geo.js             generated: projected state + county boundaries
+src/css/fonts.css           GENERATED by tools/build-fonts.js — 7 faces as data URIs
 data/raw/                   vendored us-atlas TopoJSON (Census TIGER/Line)
+data/reference/             Census FIPS master, county centroids, ingest manifest
 tools/build-geo.js          TopoJSON → projected SVG paths
+tools/build-fonts.js        Google Fonts → inlined woff2 data URIs
 tools/build-docs.js         model → docs/TOP-10.md + docs/DATA-DICTIONARY.md
 tools/build.js              inline everything → dist/
 tools/check.js              integrity checks — run before every commit
+tools/validate-geo.js       every market's counties against the Census FIPS master
+tools/ingest/               the refresh pipeline: orchestrator, county→market map,
+                            HTTP/CSV/zip helpers, one fetcher per source, self-test
+.github/workflows/          weekly scheduled refresh
 docs/                       methodology, top-10 report, data dictionary
 ```
 
 ## Checks
 
 ```bash
-node tools/check.js
+node tools/check.js            # the model and the dataset
+node tools/validate-geo.js     # every market against official Census geography
+node tools/ingest/selftest.js  # the ingest pipeline against wire-format fixtures
 ```
 
-Validates category and sub-score weights sum to 100, every market carries every
-declared field as a finite number, no undeclared fields exist, every computed
-score lands in 0–100, county FIPS codes resolve against the geography, every
-pipeline project references a real market and carries a source, and every
-anchor has a citation and a date.
+`check.js` validates that category and sub-score weights sum to 100, every market
+carries every declared field as a finite number, no undeclared fields exist,
+every computed score lands in 0–100, county FIPS codes resolve against the
+geography, every pipeline project references a real market and carries a source,
+and every anchor has a citation and a date.
+
+`validate-geo.js` checks all 79 markets against the Census county FIPS master and
+population-weighted county centroids — that each named county exists, belongs to
+the state claimed for it, and sits where the map plots it. All 79 validate
+cleanly.
+
+`selftest.js` runs each source fetcher against recorded wire-format fixtures, so
+the parsing, apportionment and aggregation paths are exercised without network
+access.
 
 ## Credits
 

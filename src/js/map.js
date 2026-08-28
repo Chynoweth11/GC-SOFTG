@@ -145,6 +145,32 @@ var MAP = (function (GEO, ST, U) {
     return q ? { x: q[0], y: q[1] } : { x: -999, y: -999 };
   }
 
+  /* Smooth view transitions. Every navigation eases rather than jumping, which
+   * is most of what makes a map feel considered rather than mechanical. */
+  var anim = null;
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  var reduceMotion = typeof matchMedia !== 'undefined' &&
+                     matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateTo(target, ms) {
+    if (anim) { cancelAnimationFrame(anim.raf); anim = null; }
+    if (reduceMotion || ms === 0) {
+      view.k = target.k; view.x = target.x; view.y = target.y;
+      applyTransform(); return;
+    }
+    var from = { k: view.k, x: view.x, y: view.y };
+    var t0 = performance.now(), dur = ms || 420;
+    anim = { raf: 0 };
+    (function step(now) {
+      var t = Math.min(1, (now - t0) / dur), e = easeOutCubic(t);
+      view.k = from.k + (target.k - from.k) * e;
+      view.x = from.x + (target.x - from.x) * e;
+      view.y = from.y + (target.y - from.y) * e;
+      applyTransform();
+      if (t < 1) anim.raf = requestAnimationFrame(step); else anim = null;
+    })(t0);
+  }
+
   function applyTransform() {
     gZoom.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.k + ')');
     /* Counter-scale nodes and labels so they keep a constant screen size. */
@@ -156,8 +182,9 @@ var MAP = (function (GEO, ST, U) {
     }
     var cg = svg.querySelector('#counties');
     if (cg) {
-      var showC = drill.level !== 'nation' || view.k >= 2.4;
-      cg.style.opacity = showC ? U.clamp((view.k - 1.2) / 1.6, 0.25, 1) : 0;
+      var forced = ST.S.showCounties;
+      var showC = forced || drill.level !== 'nation' || view.k >= 2.4;
+      cg.style.opacity = showC ? U.clamp(forced ? 1 : (view.k - 1.2) / 1.6, 0.3, 1) : 0;
     }
   }
 
@@ -165,18 +192,13 @@ var MAP = (function (GEO, ST, U) {
     if (!box) return;
     var pad = padFrac == null ? 0.12 : padFrac;
     var bw = box[2] - box[0], bh = box[3] - box[1];
-    var k = Math.min(W / (bw * (1 + pad)), H / (bh * (1 + pad)));
-    k = U.clamp(k, 1, 26);
-    view.k = k;
-    view.x = W / 2 - k * (box[0] + bw / 2);
-    view.y = H / 2 - k * (box[1] + bh / 2);
-    applyTransform();
+    var k = U.clamp(Math.min(W / (bw * (1 + pad)), H / (bh * (1 + pad))), 1, 26);
+    animateTo({ k: k, x: W / 2 - k * (box[0] + bw / 2), y: H / 2 - k * (box[1] + bh / 2) });
   }
 
   function reset() {
     drill = { level: 'nation', state: null, county: null };
-    view = { k: 1, x: 0, y: 0 };
-    applyTransform();
+    animateTo({ k: 1, x: 0, y: 0 });
     if (onDrill) onDrill(drill);
   }
 
@@ -211,8 +233,6 @@ var MAP = (function (GEO, ST, U) {
     var parts = [];
     parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">');
     parts.push('<defs>' +
-      '<filter id="glow" x="-60%" y="-60%" width="220%" height="220%">' +
-      '<feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
       '</defs>');
     parts.push('<g id="zoom">');
 
@@ -264,20 +284,24 @@ var MAP = (function (GEO, ST, U) {
     visible.forEach(function (r) {
       var q = xy(r.m), v = layer.v(r), col = U.scoreColor(v), R = nodeR(r);
       var mom = r.m.p.permitCagr3;
-      var ringCol = mom >= 4 ? '#3fd9ad' : mom >= 1 ? '#5aa9f5' : mom >= -1 ? '#4a5769' : '#f2545b';
+      var ringCol = mom >= 4 ? U.cssvar('--s1', '#3f9e8c') : mom >= 1 ? U.cssvar('--s0', '#4a6fa5') : mom >= -1 ? U.cssvar('--hairline-2', '#d3d6dd') : U.cssvar('--s5', '#b8442a');
       var ringW = U.clamp(0.8 + Math.abs(mom) * 0.16, 0.8, 2.6);
       var pulse = r.momentum >= 66;
       var sel = r.id === selId;
 
       var g = ['<g class="node' + (sel ? ' sel' : '') + '" data-id="' + r.id + '" data-x="' + q.x.toFixed(2) + '" data-y="' + q.y.toFixed(2) + '">'];
-      g.push('<circle class="halo" r="' + (R + 7).toFixed(1) + '" fill="' + col + '"/>');
+      /* A soft halo carries emphasis instead of a blur filter: a Gaussian glow
+         is a dark-UI idiom and smudges on a light ground. */
+      g.push('<circle class="halo" r="' + (R + (v >= 72 ? 10 : 7)).toFixed(1) + '" fill="' + col + '"' +
+        (v >= 72 ? ' opacity=".22"' : '') + '/>');
       if (pulse) {
         g.push('<circle fill="none" stroke="' + col + '" stroke-width="1.1" opacity="0">' +
           '<animate attributeName="r" values="' + (R + 2).toFixed(1) + ';' + (R + 17).toFixed(1) + '" dur="2.6s" repeatCount="indefinite"/>' +
           '<animate attributeName="opacity" values="0.62;0" dur="2.6s" repeatCount="indefinite"/></circle>');
       }
       g.push('<circle class="ring" r="' + (R + 3.2).toFixed(1) + '" stroke="' + ringCol + '" stroke-width="' + ringW.toFixed(2) + '" stroke-opacity=".85"/>');
-      g.push('<circle class="core" r="' + R.toFixed(1) + '" fill="' + col + '"' + (v >= 72 ? ' filter="url(#glow)"' : '') + '/>');
+      g.push('<circle class="core" r="' + R.toFixed(1) + '" fill="' + col + '"/>');
+      if (sel) g.push('<circle class="selring" r="' + (R + 5.6).toFixed(1) + '"/>');
       if (labelSet[r.id]) {
         g.push('<text class="lbl" x="0" y="' + (-(R + 6.5)).toFixed(1) + '" text-anchor="middle">' + U.esc(shortName(r.m.name)) + '</text>');
       }
@@ -307,6 +331,7 @@ var MAP = (function (GEO, ST, U) {
     /* wheel zoom about the cursor */
     svg.onwheel = function (e) {
       e.preventDefault();
+      if (anim) { cancelAnimationFrame(anim.raf); anim = null; }
       var rect = svg.getBoundingClientRect();
       var sx = (e.clientX - rect.left) / rect.width * W;
       var sy = (e.clientY - rect.top) / rect.height * H;
@@ -322,7 +347,10 @@ var MAP = (function (GEO, ST, U) {
 
     /* drag pan */
     var dragging = false, last = null, moved = 0;
-    svg.onmousedown = function (e) { dragging = true; moved = 0; last = [e.clientX, e.clientY]; svg.classList.add('drag'); };
+    svg.onmousedown = function (e) {
+      if (anim) { cancelAnimationFrame(anim.raf); anim = null; }
+      dragging = true; moved = 0; last = [e.clientX, e.clientY]; svg.classList.add('drag');
+    };
     window.addEventListener('mouseup', function () { dragging = false; if (svg) svg.classList.remove('drag'); });
     svg.onmousemove = function (e) {
       if (dragging && last) {
@@ -381,23 +409,17 @@ var MAP = (function (GEO, ST, U) {
   function hideTip() { if (tip) tip.style.display = 'none'; }
 
   function zoomBy(f) {
-    var k2 = U.clamp(view.k * f, 1, 30);
-    var g = k2 / view.k;
-    view.x = W / 2 - g * (W / 2 - view.x);
-    view.y = H / 2 - g * (H / 2 - view.y);
-    view.k = k2;
-    if (view.k <= 1.02) { view.k = 1; view.x = 0; view.y = 0; }
-    applyTransform();
+    var k2 = U.clamp(view.k * f, 1, 30), g = k2 / view.k;
+    var t = { k: k2, x: W / 2 - g * (W / 2 - view.x), y: H / 2 - g * (H / 2 - view.y) };
+    if (k2 <= 1.02) t = { k: 1, x: 0, y: 0 };
+    animateTo(t, 280);
   }
 
   function focusMarket(id) {
     var r = ST.get(id); if (!r) return;
-    var q = xy(r.m);
-    view.k = Math.max(view.k, 5.5);
-    view.x = W / 2 - view.k * q.x;
-    view.y = H / 2 - view.k * q.y;
+    var q = xy(r.m), k = Math.max(view.k, 6);
     drill = { level: 'county', state: r.m.stateFips, county: r.m.countyFips };
-    applyTransform();
+    animateTo({ k: k, x: W / 2 - k * q.x, y: H / 2 - k * q.y }, 520);
     if (onDrill) onDrill(drill);
   }
 

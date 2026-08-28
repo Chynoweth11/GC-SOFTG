@@ -82,11 +82,40 @@ var V_COMPARE = (function (ST, U, CH) {
       '<button class="btn wide mt6" data-act="top6">Load top 6</button></div>';
   }
 
+  /* Quick-start sets — the comparisons worth running before you know the data. */
+  var SETS = [
+    { id: 'top6',   label: 'Top 6 overall' },
+    { id: 'gc',     label: 'Best places to start a GC' },
+    { id: 'land',   label: 'Best places to buy land' },
+    { id: 'gap',    label: 'Biggest opportunity gaps' },
+    { id: 'ski',    label: 'Ski markets' },
+    { id: 'coast',  label: 'Coastal markets' }
+  ];
+
+  function setIds(id) {
+    var R = ST.DER.ranked, by = function (f) {
+      return R.slice().sort(function (a, b) { return f(b) - f(a); });
+    };
+    if (id === 'gc')   return by(function (r) { return r.gce; }).slice(0, 6).map(function (r) { return r.id; });
+    if (id === 'land') return by(function (r) { return r.dev; }).slice(0, 6).map(function (r) { return r.id; });
+    if (id === 'gap')  return by(function (r) { return r.gap; }).slice(0, 6).map(function (r) { return r.id; });
+    if (id === 'ski')  return R.filter(function (r) { return r.m.archetype === 'ski'; }).slice(0, 6).map(function (r) { return r.id; });
+    if (id === 'coast') return R.filter(function (r) { return r.m.archetype === 'coastal'; }).slice(0, 6).map(function (r) { return r.id; });
+    return R.slice(0, 6).map(function (r) { return r.id; });
+  }
+
   function content() {
     var ids = ST.S.compare;
     if (ids.length < 2) {
-      return '<div class="empty">Select at least two markets from the left to compare.<br><br>' +
-        '<button class="btn" data-act="top6">Load the top 6 markets</button></div>';
+      return '<div class="emptywrap"><div class="emptycard">' +
+        '<h3>Compare markets side by side</h3>' +
+        '<p>Pick two to ten markets from the list on the left. Every category score, ' +
+        'construction figure and outlook recalculates under the active scenario.</p>' +
+        '<div class="emptysets">' +
+        SETS.map(function (st) {
+          return '<button class="btn" data-set="' + st.id + '">' + U.esc(st.label) + '</button>';
+        }).join('') +
+        '</div></div></div>';
     }
     var rows = ids.map(function (id) { return ST.get(id); }).filter(Boolean);
     var colors = CH.SERIES;
@@ -154,7 +183,10 @@ var V_COMPARE = (function (ST, U, CH) {
     U.on(body, 'click', '[data-cmp]', function (e, t) { ST.toggleCompare(t.dataset.cmp); render(body); });
     U.on(body, 'click', '[data-act="clearcmp"]', function () { ST.S.compare = []; render(body); });
     U.on(body, 'click', '[data-act="top6"]', function () {
-      ST.S.compare = ST.DER.ranked.slice(0, 6).map(function (r) { return r.id; }); render(body);
+      ST.S.compare = setIds('top6'); render(body);
+    });
+    U.on(body, 'click', '[data-set]', function (e, t) {
+      ST.S.compare = setIds(t.dataset.set); render(body);
     });
     var q = document.getElementById('cmpq');
     if (q) q.addEventListener('input', function () {
