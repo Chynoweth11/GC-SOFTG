@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-08-31T17:04:40.001Z",
+  "sources": {
+    "census_acs": {
+      "ok": false,
+      "label": "U.S. Census Bureau — American Community Survey 5-year",
+      "url": "https://api.census.gov/data/{year}/acs/acs5",
+      "error": "invalid JSON: Unexpected token '<', \"<html styl\"... is not valid JSON",
+      "seconds": 4.1
+    },
+    "census_pep": {
+      "ok": true,
+      "label": "U.S. Census Bureau — Population Estimates Program",
+      "url": "https://www2.census.gov/programs-surveys/popest/datasets/",
+      "asOf": "2025",
+      "countyRows": 3144,
+      "marketValues": 156,
+      "seconds": 0.3
+    },
+    "census_bps": {
+      "ok": true,
+      "label": "U.S. Census Bureau — Building Permits Survey (county annual)",
+      "url": "https://www2.census.gov/econ/bps/County/",
+      "asOf": "2025",
+      "countyRows": 3029,
+      "marketValues": 156,
+      "seconds": 0.4
+    },
+    "bls_qcew": {
+      "ok": true,
+      "label": "Bureau of Labor Statistics — Quarterly Census of Employment and Wages",
+      "url": "https://data.bls.gov/cew/data/api/",
+      "asOf": "2025",
+      "countyRows": 90,
+      "marketValues": 78,
+      "seconds": 17.1
+    },
+    "irs_soi": {
+      "ok": true,
+      "label": "IRS Statistics of Income — county-to-county migration",
+      "url": "https://www.irs.gov/statistics/soi-tax-stats-migration-data",
+      "asOf": "2023",
+      "countyRows": 864,
+      "marketValues": 59,
+      "seconds": 2
+    },
+    "zillow_zhvi": {
+      "ok": true,
+      "label": "Zillow Research — Home Value Index (county)",
+      "url": "https://www.zillow.com/research/data/",
+      "asOf": "2026-07",
+      "countyRows": 3071,
+      "marketValues": 158,
+      "seconds": 1.3
+    },
+    "fema_nri": {
+      "ok": false,
+      "label": "FEMA — National Risk Index (county table)",
+      "url": "https://hazards.fema.gov/nri/data-resources",
+      "error": "unzip failed: not a zip archive (no EOCD)",
+      "seconds": 5.2
+    }
+  },
+  "fieldCounts": {
+    "popCagr5": 78,
+    "netMig": 78,
+    "sfPermits": 78,
+    "permitCagr3": 78,
+    "empCagr5": 78,
+    "agiIn": 59,
+    "medVal": 79,
+    "apprec5": 79
+  },
+  "summary": {
+    "sourcesLive": 5,
+    "sourcesTotal": 7,
+    "marketsCovered": 79,
+    "valueCount": 607
+  }
+}
