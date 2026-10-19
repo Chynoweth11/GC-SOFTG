@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-10-12T19:04:25.564Z",
+  "generatedAt": "2026-10-19T16:28:51.314Z",
   "sources": {
     "census_acs": {
       "ok": false,
       "label": "U.S. Census Bureau — American Community Survey 5-year",
       "url": "https://api.census.gov/data/{year}/acs/acs5",
       "error": "invalid JSON: Unexpected token '<', \"<html styl\"... is not valid JSON",
-      "seconds": 0
+      "seconds": 0.4
     },
     "census_pep": {
       "ok": true,
@@ -15,7 +15,7 @@
       "asOf": "2025",
       "countyRows": 3144,
       "marketValues": 156,
-      "seconds": 0.1
+      "seconds": 0.2
     },
     "census_bps": {
       "ok": true,
@@ -24,7 +24,7 @@
       "asOf": "2025",
       "countyRows": 3029,
       "marketValues": 156,
-      "seconds": 0
+      "seconds": 0.3
     },
     "bls_qcew": {
       "ok": true,
@@ -33,7 +33,7 @@
       "asOf": "2025",
       "countyRows": 90,
       "marketValues": 78,
-      "seconds": 2.4
+      "seconds": 14.5
     },
     "irs_soi": {
       "ok": true,
@@ -42,7 +42,7 @@
       "asOf": "2023",
       "countyRows": 864,
       "marketValues": 59,
-      "seconds": 0.8
+      "seconds": 1.3
     },
     "zillow_zhvi": {
       "ok": true,
@@ -51,7 +51,7 @@
       "asOf": "2026-08",
       "countyRows": 3071,
       "marketValues": 158,
-      "seconds": 0.9
+      "seconds": 0.4
     },
     "fema_nri": {
       "ok": false,
